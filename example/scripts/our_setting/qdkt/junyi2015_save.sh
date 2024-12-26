@@ -21,4 +21,4 @@
       --dim_concept 64 --dim_question 64 --dim_correct 64 --dim_latent 128 --rnn_type gru --num_rnn_layer 1 --dropout 0.1 --num_predict_layer 3 --dim_predict_mid 128 --activate_type relu \
       --use_sample_reweight False --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/qdkt_our_setting_new_junyi2015_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/qdkt_our_setting_junyi2015_save.txt

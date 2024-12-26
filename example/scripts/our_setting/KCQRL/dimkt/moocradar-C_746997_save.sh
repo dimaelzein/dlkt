@@ -7,7 +7,7 @@
   for fold in 0 1 2 3 4
   do
     echo -e "fold: ${fold}"
-    python F:/code/myProjects/dlkt/example/train/dimkt.py \
+    python /ghome/xiongzj/code/dlkt-release/example/train/dimkt.py \
       --setting_name "our_setting" --dataset_name "${dataset_name}" --data_type "${data_type}" \
       --train_file_name "${dataset_name}_train_fold_${fold}.txt" --valid_file_name "${dataset_name}_valid_fold_${fold}.txt" --test_file_name "${dataset_name}_test_fold_${fold}.txt" \
       --optimizer_type "adam" --weight_decay 0.0001 --momentum 0.9 \
@@ -22,4 +22,4 @@
       --dim_emb 64 --num_question_diff 25 --num_concept_diff 100 --dropout 0.1 \
       --use_sample_reweight False --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/our_setting_dimkt_moocradar-C_746997_save.txt
+} >> /ghome/xiongzj/code/dlkt-release/example/result_cluster/our_setting_dimkt_moocradar-C_746997_save.txt

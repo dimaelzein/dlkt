@@ -16,4 +16,4 @@
       --num_concept 101 --num_question 2803 \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/lbkt_our_setting_new_assist2017_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/lbkt_our_setting_assist2017_save.txt

@@ -26,25 +26,27 @@
 
 - 根据我们的经验，知识追踪模型对超参数敏感度低，所以即使是不同的实验设置，也可以使用该实验设置下的超参数来训练模型，无需再次调参
 
+- [获取划分好的数据](https://drive.google.com/drive/folders/1HYERnQYJz3diK1TZXhd_gJDL7eW1VnOk?usp=sharing)
+
 ### Overall metric (AUC)
 
 - 常规指标，计算所有样本的性能，汇报AUC指标
 
-|           | Assist2009 | Assist2012 | Ednet-KT1 | Statics2011 | Xes3g5m | Slemapy-Anatomy |
-| :-------: | :--------: | :--------: | :-------: | :---------: | :-----: | :-------------: |
-|    DKT    |   0.7481   |   0.7337   |  0.6612   |   0.7113    | 0.7838  |     0.6838      |
-|   DKVMN   |   0.7456   |   0.7217   |   0.668   |   0.7046    | 0.7748  |     0.6745      |
-|   SAKT    |   0.7328   |   0.721    |  0.6642   |   0.6776    | 0.7791  |      0.676      |
-|   LPKT    |   0.7682   |   0.7884   |  0.7394   |   0.8216    | 0.8257  |     0.7365      |
-|   DIMKT   |   0.7647   |   0.7845   |  0.7154   |   0.8198    | 0.8262  |     0.7285      |
-| SimpleKT  |   0.7853   |   0.7818   |  0.7342   |   0.8214    | 0.8198  |     0.7316      |
-|   QIKT    |   0.7843   |   0.7753   |  0.7329   |   0.8268    | 0.8232  |     0.7234      |
-| SparseKT  |   0.7782   |   0.7727   |  0.7302   |   0.8162    | 0.8153  |     0.7258      |
-|   MIKT    |   0.7886   |   0.7902   |  0.7436   |   0.8213    | 0.8179  |     0.7369      |
-|    AKT    |   0.7854   |   0.7904   |  0.7345   |   0.8193    | 0.8225  |     0.7288      |
-|   qDKT    |   0.7684   |   0.7861   |  0.7354   |   0.8191    | 0.8252  |     0.7247      |
-| AKT-CORE  |   0.7512   |   0.7619   |  0.7076   |   0.7811    | 0.8037  |     0.7133      |
-| qDKT-CORE |   0.7365   |   0.7527   |  0.6544   |   0.7608    |  0.78   |     0.7008      |
+|           |  Assist2009   |  Assist2012   |   Ednet-KT1   |  Statics2011  |    Xes3g5m    | Slemapy-Anatomy |
+| :-------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-------------: |
+|    DKT    |    0.7481     |    0.7337     |    0.6612     |    0.7113     |    0.7838     |     0.6838      |
+|   DKVMN   |    0.7456     |    0.7217     |     0.668     |    0.7046     |    0.7748     |     0.6745      |
+|   SAKT    |    0.7328     |     0.721     |    0.6642     |    0.6776     |    0.7791     |      0.676      |
+|   LPKT    |    0.7682     |    0.7884     | <u>0.7394</u> | <u>0.8216</u> | <u>0.8257</u> |  <u>0.7365</u>  |
+|   DIMKT   |    0.7647     |    0.7845     |    0.7154     |    0.8198     |  **0.8262**   |     0.7285      |
+| SimpleKT  |    0.7853     |    0.7818     |    0.7342     |    0.8214     |    0.8198     |     0.7316      |
+|   QIKT    |    0.7843     |    0.7753     |    0.7329     |  **0.8268**   |    0.8232     |     0.7234      |
+| SparseKT  |    0.7782     |    0.7727     |    0.7302     |    0.8162     |    0.8153     |     0.7258      |
+|   MIKT    |  **0.7886**   | <u>0.7902</u> |  **0.7436**   |    0.8213     |    0.8179     |   **0.7369**    |
+|    AKT    | <u>0.7854</u> |  **0.7904**   |    0.7345     |    0.8193     |    0.8225     |     0.7288      |
+|   qDKT    |    0.7684     |    0.7861     |    0.7354     |    0.8191     |    0.8252     |     0.7247      |
+| AKT-CORE  |    0.7512     |    0.7619     |    0.7076     |    0.7811     |    0.8037     |     0.7133      |
+| qDKT-CORE |    0.7365     |    0.7527     |    0.6544     |    0.7608     |     0.78      |     0.7008      |
 
 |          | Assist2017 | Junyi2015 | Edi2020-task1 | Edi2020-task34 |
 | :------: | :--------: | :-------: | :-----------: | :------------: |
@@ -72,34 +74,35 @@
 
 - KCQRL复现
   - Automated **K**nowledge **C**oncept Annotation and **Q**uestion **R**epresentation **L**earning for Knowledge Tracing （[paper](https://arxiv.org/abs/2410.01727), [code](https://github.com/oezyurty/KCQRL)）
-  - direct que emb：直接使用习题文本的emb训练KT模型。其中Xes3g5m使用数据集提供的question emb，Moocradar-C_746997调用ZhipuAI/embedding-3获取question emb
+  - direct que emb：直接使用习题文本的emb训练KT模型。其中Xes3g5m使用数据集提供的question emb，Moocradar-C_746997和Edi2020-task34调用ZhipuAI/embedding-3获取question emb
   - KCQRL emb：使用论文提出的训练方法所得到的question emb
-  - 训练KT模型时，设置预训练的question emb为可学习
+  - 训练KT模型时，设置预训练的question emb为可学习，KT模型的参数都设置为和baseline一致
   - DIMKT：no concept表示concept emb和concept diff emb设置为0（和KCQRL论文一致）；use concept表示设置concept emb和concept diff emb（使用数据集提供的知识点）为可学习的embedding
-  - 
 
-|                                         |    Xes3g5m    | Moocradar-C_746997 | Eedi |
-| :-------------------------------------: | :-----------: | :----------------: | :--: |
-|             DKT (baseline)              |    0.8226     |       0.8126       |      |
-|        DKT_QUE (direct que emb)         |     0.827     |       0.8205       |      |
-|           DKT_QUE (KCQRL emb)           |     0.828     |       0.8164       |      |
-|            DKVMN (baseline)             |    0.8213     |       0.8073       |      |
-|       DKVMN_QUE (direct que emb)        |    0.8232     |       0.8148       |      |
-|          DKVMN_QUE (KCQRL emb)          |    0.8232     |       0.8101       |      |
-|             AKT (baseline)              |    0.8225     |       0.8155       |      |
-|        AKT_QUE (direct que emb)         |  **0.8287**   |       0.8202       |      |
-|           AKT_QUE (KCQRL emb)           | <u>0.8281</u> |       0.8187       |      |
-|            DIMKT (baseline)             |    0.8262     |       0.8186       |      |
-| DIMKT_QUE (no concept, direct que emb)  |    0.8259     |   <u>0.8208</u>    |      |
-| DIMKT_QUE (use concept, direct que emb) |    0.8257     |       0.8205       |      |
-|    DIMKT_QUE (no concept, KCQRL emb)    |    0.8248     |     **0.8211**     |      |
+|                                         | Xes3g5m | Moocradar-C_746997 | Edi2020-task34 |
+| :-------------------------------------: | :-----: | :----------------: | :------------: |
+|             DKT (baseline)              | 0.8226  |       0.8126       |     0.7877     |
+|        DKT_QUE (direct que emb)         |  0.827  |       0.8205       |     0.7885     |
+|           DKT_QUE (KCQRL emb)           |  0.828  |       0.8164       |     0.7888     |
+|            DKVMN (baseline)             | 0.8213  |       0.8073       |     0.7868     |
+|       DKVMN_QUE (direct que emb)        | 0.8232  |       0.8148       |     0.7912     |
+|          DKVMN_QUE (KCQRL emb)          | 0.8232  |       0.8101       |     0.7907     |
+|             AKT (baseline)              | 0.8225  |       0.8155       |     0.793      |
+|        AKT_QUE (direct que emb)         | 0.8287  |       0.8202       |     0.7957     |
+|           AKT_QUE (KCQRL emb)           | 0.8281  |       0.8187       |     0.7948     |
+|            DIMKT (baseline)             | 0.8262  |       0.8186       |     0.7936     |
+| DIMKT_QUE (no concept, direct que emb)  | 0.8259  |       0.8208       |     0.794      |
+| DIMKT_QUE (use concept, direct que emb) | 0.8257  |       0.8205       |     0.7938     |
+|    DIMKT_QUE (no concept, KCQRL emb)    | 0.8248  |       0.8211       |     0.7947     |
 
 - KCQRL消融实验
+  - KT模型参数和KCQRL一致，只改变输入的que emb
   - w/o step：对比学习训练习题的emb时，只使用知识点，不使用解题步骤
   - w/o cluster：对比学习训练习题的emb时，不对知识点进行聚类
-  - (LLM)：使用LLM提取的知识点（和论文一样）训练que emb
+  - (LLM)：使用LLM提取的知识点训练que emb
   - (KC)：使用数据集提供的知识点训练que emb
-  - 训练que emb代码：[翻译和解题步骤获取](https://github.com/ZhijieXiong/DSPY-application/tree/main/dspy-project/KnowledgeTracing/KCQRL), [训练](https://github.com/ZhijieXiong/KCQRL-train-que-emb)
+  - 训练que emb代码：[翻译和解题步骤获取代码](https://github.com/ZhijieXiong/DSPY-application/tree/main/dspy-project/KnowledgeTracing/KCQRL), [训练emb代码](https://github.com/ZhijieXiong/KCQRL-train-que-emb)
+  
 
 |           |           | KCQRL  | w/o step (LLM) | w/o step & cluster (LLM) | w/o step (KC) | w/o step & cluster (KC) |
 | :-------: | :-------: | :----: | :------------: | :----------------------: | :-----------: | :---------------------: |
@@ -109,9 +112,9 @@
 | Moocradar |  DKT_QUE  | 0.8164 |     0.8154     |          0.8169          |     0.817     |         0.8174          |
 | Moocradar | DKVMN_QUE | 0.8101 |     0.8103     |          0.8088          |    0.8135     |         0.8128          |
 | Moocradar |  AKT_QUE  | 0.8187 |     0.8173     |          0.8169          |     0.818     |         0.8185          |
-|   Eedi    |  DKT_QUE  |        |                |                          |               |                         |
-|   Eedi    | DKVMN_QUE |        |                |                          |               |                         |
-|   Eedi    |  AKT_QUE  |        |                |                          |               |                         |
+|  Edi2020  |  DKT_QUE  | 0.7888 |     0.7886     |          0.7884          |    0.7891     |         0.7887          |
+|  Edi2020  | DKVMN_QUE | 0.7907 |     0.7909     |          0.7912          |    0.7914     |         0.7917          |
+|  Edi2020  |  AKT_QUE  | 0.7948 |     0.7946     |          0.795           |    0.7952     |         0.7958          |
 
 ### CORE metric (AUC)
 
@@ -178,7 +181,7 @@
   1. 我们并没有像 `pyKT` 那样首先将练习序列扩展为知识概念序列（见 `pyKT` 论文图2），然后在知识概念序列上训练模型，最后在问题上测试模型（见 `pyKT` 论文第3.3节）。我们的复现是直接在问题序列上训练和测试模型，也就是说，对于多概念问题，我们使用 `mean pooling` 来处理多个概念嵌入。
   2. 这种差异不仅体现在模型的训练和测试上，还体现在数据预处理上。`pyKT` 首先扩展序列，然后切分序列，固定每个序列的长度为200。而我们是直接切分序列，固定序列长度为200。
 
-  |          |   Assist2009   |     AL2005     |     BD2006     |    xes3g5m     |
+  |          |   Assist2009   |     AL2005     |     BD2006     |    Xes3g5m     |
   | :------: | :------------: | :------------: | :------------: | :------------: |
   |   DKT    | 0.756(0.7541)  | 0.8162(0.8149) | 0.7748(0.8015) | 0.7849(0.7852) |
   |   AKT    | 0.7911(0.7853) | 0.8169(0.8306) | 0.8162(0.8208) | 0.8231(0.8207) |
@@ -191,20 +194,20 @@
   1. 对于问题数量较少的数据集，我们的 DKT 和 ATKT 也提供了以问题作为条目的结果。
   2. 对于 `statics2011` 和 `edi2020-task34` 数据集，我们的数据预处理与 `pyKT` 不同。
 
-|           |  Statics2011   |     NIPS34     |
-| :-------: | :------------: | :------------: |
-|    DKT    |     0.7142     | 0.762(0.7681)  |
-|  DKT_que  | 0.8161(0.8222) | 0.7935(0.7995) |
-|   DKVMN   |     0.7066     | 0.7512(0.7673) |
-| DKVMN_que | 0.8078(0.8093) |     0.7901     |
-|   SAINT   | 0.7273(0.7599) | 0.7846(0.7873) |
-|   ATKT    |     0.696      | 0.7603(0.7665) |
-| ATKT_que  | 0.8018(0.8055) |     0.7844     |
-|    AKT    | 0.8244(0.8309) | 0.7943(0.8033) |
-| SimpleKT  | 0.8258(0.8199) | 0.7955(0.8035) |
-|  AT-DKT   |      todo      |      todo      |
-|   QIKT    |     0.8303     | 0.7993(0.8044) |
-|   qDKT    |     0.8236     |     0.7968     |
+|               |  Statics2011   | NIPS34 (Edi2020-task34) |
+| :-----------: | :------------: | :---------------------: |
+|      DKT      |     0.7142     |      0.762(0.7681)      |
+|  DKT_use_que  | 0.8161(0.8222) |     0.7935(0.7995)      |
+|     DKVMN     |     0.7066     |     0.7512(0.7673)      |
+| DKVMN_use_que | 0.8078(0.8093) |         0.7901          |
+|     SAINT     | 0.7273(0.7599) |     0.7846(0.7873)      |
+|     ATKT      |     0.696      |     0.7603(0.7665)      |
+| ATKT_use_que  | 0.8018(0.8055) |         0.7844          |
+|      AKT      | 0.8244(0.8309) |     0.7943(0.8033)      |
+|   SimpleKT    | 0.8258(0.8199) |     0.7955(0.8035)      |
+|    AT-DKT     |      todo      |          todo           |
+|     QIKT      |     0.8303     |     0.7993(0.8044)      |
+|     qDKT      |     0.8236     |         0.7968          |
 
 ## Other Setting (Knowledge Tracing)
 

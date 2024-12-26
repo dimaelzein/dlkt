@@ -24,4 +24,4 @@
       --weight_predict_c_all_loss 2 --weight_predict_c_next_loss 2 \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/qikt_our_setting_new_assist2009_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/qikt_our_setting_assist2009_save.txt

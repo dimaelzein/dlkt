@@ -73,8 +73,8 @@
 
 ## Text Info
 
-- with text of concept: `xes3g5m` `assist2009` `assist2012` `assist2017`
-- with text of quextion:  `xes3g5m` `moocradar`
+- with text of concept: `xes3g5m` `assist2009` `assist2012` `assist2017` `edi2020`
+- with text of quextion:  `xes3g5m` `moocradar` `edi2020-task34`[edi2020-task34习题文本获取](https://github.com/ZhijieXiong/DSPY-application/blob/main/dspy-project/KnowledgeTracing/data/edi2020-task34/question.json)
 
 ## Statics Info
 
@@ -181,7 +181,7 @@ assist2017: [download](https://sites.google.com/view/assistmentsdatamining/datas
 
 ## NeurIPS 2020 Education Challenge (edi2020)
 
-[download](https://eedi.com/projects/neurips-education-challenge)
+[download](https://eedi.com/projects/neurips-education-challenge) `[edi2020-task34习题文本获取](https://github.com/ZhijieXiong/DSPY-application/blob/main/dspy-project/KnowledgeTracing/data/edi2020-task34/question.json)
 
 ## Ednet
 

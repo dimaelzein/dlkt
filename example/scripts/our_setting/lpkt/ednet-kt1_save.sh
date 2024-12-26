@@ -21,4 +21,4 @@
       --ablation_set 0 --dim_e 64 --dim_k 64 --dim_correct 50 --dropout 0.4 \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/lpkt_our_setting_new_ednet-kt1_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/lpkt_our_setting_ednet-kt1_save.txt

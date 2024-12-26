@@ -21,4 +21,4 @@
       --dim_emb 256 --dim_latent 256 --rnn_type gru --num_rnn_layer 1 --dropout 0.3 --num_predict_layer 2 --dim_predict_mid 256 --activate_type sigmoid \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/dkt_our_setting_new_assist2009_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/dkt_our_setting_assist2009_save.txt

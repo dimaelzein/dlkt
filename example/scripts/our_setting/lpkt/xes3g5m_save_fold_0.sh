@@ -18,4 +18,4 @@
     --num_concept 865 --num_question 7652 \
     --ablation_set 1 --dim_e 256 --dim_k 256 --dim_correct 50 --dropout 0.1 \
     --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
-} >> /ghome/xiongzj/code/dlkt/example/result_cluster/lpkt_our_setting_new_xes3g5m_fold_0_save.txt
+} >> /ghome/xiongzj/code/dlkt/example/result_cluster/lpkt_our_setting_xes3g5m_fold_0_save.txt

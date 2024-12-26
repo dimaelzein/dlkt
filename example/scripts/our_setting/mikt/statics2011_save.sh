@@ -22,4 +22,4 @@
       --num_concept "${num_concept}" --num_question "${num_question}" --dim_emb 64 --dim_state 64 --dropout 0.2 --seq_len 200 \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> /ghome/xiongzj/code/dlkt/example/result_cluster/mikt_our_setting_new_statics2011_save.txt
+} >> /ghome/xiongzj/code/dlkt/example/result_cluster/mikt_our_setting_statics2011_save.txt

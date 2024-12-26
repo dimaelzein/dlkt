@@ -22,4 +22,4 @@
       --seq_len 200 --key_query_same True --separate_qa False --difficulty_scalar False \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/simple_kt_our_setting_new_edi2020-task34_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/simple_kt_our_setting_edi2020-task34_save.txt

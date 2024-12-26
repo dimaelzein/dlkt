@@ -21,4 +21,4 @@
       --use_concept True --num_concept 865 --num_question 7652 --dim_key 64 --dim_value 64 --dropout 0.2 \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> /ghome/xiongzj/code/dlkt/example/result_cluster/dkvmn_our_setting_new_xes3g5m_save.txt
+} >> /ghome/xiongzj/code/dlkt/example/result_cluster/dkvmn_our_setting_xes3g5m_save.txt

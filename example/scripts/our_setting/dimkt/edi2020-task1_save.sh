@@ -22,4 +22,4 @@
       --dim_emb 128 --num_question_diff 100 --num_concept_diff 100 --dropout 0.2 \
       --use_sample_reweight False --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/dimkt_our_setting_new_edi2020-task1_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/dimkt_our_setting_edi2020-task1_save.txt

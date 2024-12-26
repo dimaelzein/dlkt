@@ -21,4 +21,4 @@
       --ablation_set 2 --dim_e 64 --dim_k 64 --dim_correct 50 --dropout 0.2 \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/lpkt_our_setting_new_assist2009_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/lpkt_our_setting_assist2009_save.txt

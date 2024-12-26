@@ -23,4 +23,4 @@
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
 
-} >> F:/code/myProjects/dlkt/example/result_local/akt-core_our_setting_new_slepemapy-anatomy_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/akt-core_our_setting_slepemapy-anatomy_save.txt

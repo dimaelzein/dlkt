@@ -27,4 +27,4 @@
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
 
-} >> /ghome/xiongzj/code/dlkt/example/result_cluster/sparse_kt_our_setting_new_xes3g5m_save.txt
+} >> /ghome/xiongzj/code/dlkt/example/result_cluster/sparse_kt_our_setting_xes3g5m_save.txt

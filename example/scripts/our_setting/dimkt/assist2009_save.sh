@@ -22,4 +22,4 @@
       --dim_emb 128 --num_question_diff 50 --num_concept_diff 50 --dropout 0.3 \
       --use_sample_reweight False --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> F:/code/myProjects/dlkt/example/result_local/dimkt_our_setting_new_assist2009_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/dimkt_our_setting_assist2009_save.txt

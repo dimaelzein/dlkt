@@ -21,4 +21,4 @@
       --use_concept True --num_concept 123 --num_question 17751 --dim_key 64 --dim_value 32 --dropout 0.2 \
       --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
-} >> /ghome/xiongzj/code/dlkt/example/result_cluster/dkvmn_our_setting_new_assist2009_save.txt
+} >> /ghome/xiongzj/code/dlkt/example/result_cluster/dkvmn_our_setting_assist2009_save.txt

@@ -23,4 +23,4 @@
       --use_sample_reweight False --save_model True --debug_mode False --use_cpu False --seed 0 --trace_epoch True
   done
 
-} >> F:/code/myProjects/dlkt/example/result_local/akt_our_setting_new_edi2020-task34_save.txt
+} >> F:/code/myProjects/dlkt/example/result_local/akt_our_setting_edi2020-task34_save.txt
