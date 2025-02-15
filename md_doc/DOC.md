@@ -33,14 +33,10 @@
 - `multi_concept` 对于多知识点数据集，将一道多知识点习题拆成多个单知识习题
 - `single_concept` 对于单知识点数据集，即习题序列和知识点序列一一对应；对于多知识点数据集，将多知识点组合视为新知识点，则数据集转换为单知识点数据集
 - `only_question` 只有习题序列，对于无知识点或者无习题数据集，都将其视为习题序列
-- 为什么要处理为多种数据格式？
-  - 有些方法（原论文提供的代码）默认习题和知识点是一一对应的，如`AKT`、`DIMKT`，这些方法需要处理为`multi_concept`或者`single_concept`
-  - 有些方法对于多知识点习题，是将其多个对应知识点的embedding取平均，然后和习题embedding一起送入encoder，如`IEKT`和`AKT table 6`，或者直接基于习题进行训练和预测，如`LPKT`和`LBKT`，这些方法就需要处理为`only_question`数据格式
-  - 有些方法在预处理时将`multi_concept`数据转换为`single_concept`，如`CL4KT`
 
 ## 2、数据集信息
 
-- 单知识点数据集：`assist2012` `assist2017` `edi2020` `SLP` `slepemapy` `statics2011` `junyi2015`
+- 单知识点数据集：`assist2012` `assist2017` `edi2020` `SLP` `slepemapy-anatomy` `statics2011` `junyi2015`
 
   - `SLP`是一系列数据集，包括`SLP-[mat|his|geo|bio|eng|phy|chi]`
   - `edi2020`是一系列数据集，包括`edi2020-task[1|34]`
@@ -55,7 +51,7 @@
 
   - 对于多知识点数据集，会生成3种预处理数据：`data_multi_concept.txt`、`data_single_concept.txt`和`data_only_question.txt`
 
-  - 注意：`xes3g5m`的知识点是层级的，但是最细粒度的知识点是多个的，所以当成多知识点数据集处理。`xes3g5m`的一个例子
+  - `xes3g5m`的知识点是层级的，但是最细粒度的知识点是多个的，所以当成多知识点数据集处理。`xes3g5m`的一个例子
 
     ```
     习题1035
@@ -88,19 +84,97 @@
 
 - 按照`README.md`中`Quick-Start`操作，生成的目录结构如下，原始数据放到 `lab/dataset_raw` 下
 
-  <div align=center><img src="../resources/lab_dir.png" /></div>
+  ```
+  (base) bogon:dataset_raw dream$ tree -L 2 .
+  .
+  ├── SLP
+  │   ├── family.csv
+  │   ├── psycho.csv
+  │   ├── school.csv
+  │   ├── student.csv
+  │   ├── term-bio.csv
+  │   ├── term-chi.csv
+  │   ├── term-eng.csv
+  │   ├── term-geo.csv
+  │   ├── term-his.csv
+  │   ├── term-mat.csv
+  │   ├── term-phy.csv
+  │   ├── unit-bio.csv
+  │   ├── unit-chi.csv
+  │   ├── unit-eng.csv
+  │   ├── unit-geo.csv
+  │   ├── unit-his.csv
+  │   ├── unit-mat.csv
+  │   └── unit-phy.csv
+  ├── assist2009
+  │   └── skill_builder_data.csv
+  ├── assist2009-full
+  │   └── assistments_2009_2010.csv
+  ├── assist2012
+  │   └── 2012-2013-data-with-predictions-4-final.csv
+  ├── assist2015
+  │   └── 2015_100_skill_builders_main_problems.csv
+  ├── assist2017
+  │   └── anonymized_full_release_competition_dataset.csv
+  ├── edi2020
+  │   ├── Eedi-Mining-Misconceptions-in-Mathematics-train.csv
+  │   ├── images
+  │   ├── metadata
+  │   └── train_data
+  ├── edi2022
+  │   ├── Task_1_dataset
+  │   ├── Task_2_dataset
+  │   ├── Task_3_dataset
+  │   └── Task_4_dataset
+  ├── junyi2015
+  │   ├── junyi_Exercise_table.csv
+  │   ├── junyi_ProblemLog_original.csv
+  │   ├── relationship_annotation_testing.csv
+  │   └── relationship_annotation_training.csv
+  ├── kdd_cup2010
+  │   ├── algebra_2005_2006_train.txt
+  │   ├── algebra_2006_2007_train.txt
+  │   ├── algebra_2008_2009_train.txt
+  │   └── bridge_to_algebra_2006_2007_train.txt
+  ├── moocradar
+  │   ├── problem.json
+  │   ├── student-problem-coarse.json
+  │   ├── student-problem-fine.json
+  │   └── student-problem-middle.json
+  ├── poj
+  │   └── poj_log.csv
+  ├── slepemapy-anatomy
+  │   └── answers.csv
+  ├── statics2011
+  │   └── AllData_student_step_2011F.csv
+  └── xes3g5m
+      ├── kc_level
+      ├── metadata
+      └── question_level
+  ```
+
+  
 
 - `ednet-kt1`因为原始数据文件太多，所以先使用`exampe/concat_ednet.py`将每5000名学生的记录合成一个文件（通常情况下做`ednet-kt1`的实验也是随机选5000名学生的记录），合成后的文件会放到`dataset_raw/ednet-kt1`下，其目录为：
 
-  <div align=center><img src="../resources/ednet-kt1_raw_dir.png" /></div>
+  ```
+  ├── ednet-kt1
+  │   ├── EdNet-Contents
+  │   ├── users_0.csv
+  │   ├── users_1.csv
+  │   ├── users_10.csv
+  │   ├── users_100.csv
+  │   ├── users_101.csv
+  │   ├── users_102.csv
+  │   ├── users_103.csv
+  ...
+  ```
 
 - 运行 `example/preprocess`处理指定数据集（即`dataset_preprocessed`下的目录名），生成的数据在 `lab/dataset_preprocessed`
 
 ## 4、预处理生成的文件
 
-以`assist2009`（多知识点数据集）为例，生成的预处理文件如下
-
-<div align=center><img src="../resources/assist2009_preprocessed_dir.png" /></div>
+生成的预处理文件如下
 
 - `concpet_id_map_[data_type].csv` ：知识点id映射文件，包括以下字段
 
@@ -165,7 +239,6 @@
   - 数据预处理：对原始数据的处理。包括丢弃信息缺失的交互（如习题、知识点缺少的交互），习题和知识点id的重映射，时间信息（做题时间、做题耗时）等
   - 数据集划分处理：对预处理数据的处理，具体来说每篇论文的实验设置不一样，这一部分也就不一样。包括固定序列的长度、数据集的划分（训练集、验证集、测试集）等
   - 具体的实验设置：有些论文的实验设置比较特殊，需要单独处理。如`DIMKT`论文中会过滤掉出现次数小于30次的知识点和习题、`AKT`中对`assist2009`数据集的预处理是只保留有`skill_name`的知识点
-- 整个数据处理的pipline如下
 
 ## 6、提供的实验设置
 
@@ -221,17 +294,15 @@
 
 # 二、训练模型
 
-## 1、基本介绍
+## 1、知识追踪
 
-- `example/train`目录下的每一个文件都对应一个模型的训练代码，其中分为两类，原始KT模型和加载了其它方法的KT模型
-  - 像`dkt.py`、`akt.py`等就是原始KT模型
-  - 像`akt_instance_cl.py`、`qdkt_matual_enhance4long_tail.py`等就是加载了其它方法的KT模型，如`akt_instance_cl.py`表示使用了个体判别对比学习的`AKT`模型
-- 训练全过程包括以下步骤
-  - 配置全局参数和全局对象：配置代码在`example/train/config`下
-  - 加载和处理数据：使用`lib/dataset`下的对应`Dataset`类加载数据
-  - 训练模型：使用`lib/trainer`下的对应`Trainer`类训练模型
+- `example4knowledge_tracing/train`目录对应知识追踪模型训练
 
-## 2、通用参数
+- `example4cognitive_diagnosis/train`目录对应认知诊断模型训练
+
+- `example4exercise_recommendation/train`目录对应习题推荐模型训练
+
+## 2、参数含义
 
 - 数据集参数
   - `setting_name` 即`lab/settings`下的文件夹名
@@ -252,7 +323,7 @@
   - `use_last_average` 是否计算最后n个epoch模型的平均性能
   - `epoch_last_average` `use_last_average`中的n
 - 评价指标参数
-  - `main_metric` 用于选择模型的指标，可选值为`"AUC", "ACC", "RMSE", "MAE"`
+  - `main_metric` 用于选择模型的指标
   - `use_multi_metrics` 是否使用多个指标选择模型
   - `multi_metrics` 使用多个指标选择模型的规则，如`"[('AUC', 1), ('ACC', 1)]"`表示使用`AUC`和`ACC`一起选择模型，并且权重分别为1，即`AUC * 1 + ACC * 1`为选择指标
 - 学习率参数
@@ -275,11 +346,11 @@
   - `seed` 随机数种子
   - `trace_epoch` 是否追踪每个epoch下细粒度指标的变化
 
-# 三、测试模型
+# 三、测试模型（知识追踪）
 
 ## 1、基本介绍
 
-- 测试代码：`example/evaluate.py`
+- 测试代码：`example4knowledge_tracing/evaluate_dlkt.py`
 - 参数说明
   - `save_model_dir` 保存模型参数文件和checkpoint的目录地址
   - `save_model_name` checkpoint文件名
@@ -295,11 +366,7 @@
   - `train_diff_file_path` DIMKT训练时生成的文件
   - `num_question_diff` 和 `num_concept_diff` 和训练时保持一致，防止出现越界错误
 
-## 2、基于习题的测试
-
-- 由`pyKT`提出，用于测试多知识点数据集在`multi_concept`设置下的性能
-
-## 3、细粒度测试
+## 2、细粒度测试
 
 - 细粒度测试包括
   1. 基于序列长度评估（冷启动）
@@ -322,61 +389,7 @@
   3. 运行`example/evaluate.py`进行模型评估
   4. 如果没有第一步，则只能进行（1）基于序列长度评估和（2）基于seq bias评估（3）基于习题偏差进行平衡采样后的评估
 
-# 四、其它
-
-## 1、自动生成脚本
-
-- 因为参数过多，在写shell脚本时比较麻烦，所以写了一个小工具，直接根据代码文件生成对应的shell脚本
-- 工具代码：` auto_export_script.py `，各参数含义如下
-  - `target_python_file` 想要生成脚本的训练代码文件（使用`argparse`接受参数），如`example/train/dkt.py`
-  - `script_dir` 存放生成的shell脚本的文件夹
-
-## 2、自动处理结果
-
-- 解析训练日志文件，对多个结果取平均值，工具代码：` parse_result.py `
-
-- 假设一份训练日志如下，是同一参数的模型在同一数据集（5折）下跑出来的结果，想计算在5折上测试集的平均结果，则设置参数
-
-  - `file_path` 日志路径
-  - `key_words` `"test performance by best valid epoch is main metric"`，用于定位从哪一行解析数据。设为该值则是计算5折下测试集（根据验证集选出来的最佳模型）性能平均值
-  - `n` 5
-
-  ```
-  fold: 0
-  ...
-  train performance by best valid epoch is main metric: 0.82957  , AUC: 0.82957  , ACC: 0.78909  , RMSE: 0.38264  , MAE: 0.30218  , 
-  valid performance by best valid epoch is main metric: 0.78778  , AUC: 0.78778  , ACC: 0.76575  , RMSE: 0.4016   , MAE: 0.31836  , 
-  test performance by best valid epoch is main metric: 0.78986  , AUC: 0.78986  , ACC: 0.76307  , RMSE: 0.40327  , MAE: 0.32076  , 
-  
-  fold: 1
-  ...
-  train performance by best valid epoch is main metric: 0.83059  , AUC: 0.83059  , ACC: 0.78958  , RMSE: 0.38226  , MAE: 0.30111  , 
-  valid performance by best valid epoch is main metric: 0.78966  , AUC: 0.78966  , ACC: 0.7634   , RMSE: 0.40328  , MAE: 0.32049  , 
-  test performance by best valid epoch is main metric: 0.78705  , AUC: 0.78705  , ACC: 0.7653   , RMSE: 0.40204  , MAE: 0.31846  , 
-  
-  
-  fold: 2
-  ...
-  train performance by best valid epoch is main metric: 0.82985  , AUC: 0.82985  , ACC: 0.78979  , RMSE: 0.38258  , MAE: 0.30337  , 
-  valid performance by best valid epoch is main metric: 0.79009  , AUC: 0.79009  , ACC: 0.76466  , RMSE: 0.40252  , MAE: 0.32118  , 
-  test performance by best valid epoch is main metric: 0.79002  , AUC: 0.79002  , ACC: 0.76625  , RMSE: 0.40116  , MAE: 0.31912  , 
-  
-  
-  fold: 3
-  ...
-  train performance by best valid epoch is main metric: 0.82923  , AUC: 0.82923  , ACC: 0.78908  , RMSE: 0.38311  , MAE: 0.30516  , 
-  valid performance by best valid epoch is main metric: 0.7895   , AUC: 0.7895   , ACC: 0.76412  , RMSE: 0.40272  , MAE: 0.32309  , 
-  test performance by best valid epoch is main metric: 0.78946  , AUC: 0.78946  , ACC: 0.76614  , RMSE: 0.40156  , MAE: 0.32135  , 
-  
-  
-  fold: 4
-  ...
-  train performance by best valid epoch is main metric: 0.82341  , AUC: 0.82341  , ACC: 0.78603  , RMSE: 0.38598  , MAE: 0.31031  , 
-  valid performance by best valid epoch is main metric: 0.78841  , AUC: 0.78841  , ACC: 0.76316  , RMSE: 0.40364  , MAE: 0.32645  , 
-  test performance by best valid epoch is main metric: 0.78818  , AUC: 0.78818  , ACC: 0.76245  , RMSE: 0.40349  , MAE: 0.32623  ,  
-  ```
-
-# 五、加入自己的数据和模型
+# 四、加入自己的数据和模型
 
 ## 1、添加自己的数据
 
@@ -386,7 +399,7 @@
 ## 2、添加自己的模型
 
 - 第一步：写模型代码，放到`lib/model/`下
-- 第三步：写训练配置代码，放到`example/train/config/`下
-- 第四步：写训练启动代码，放到`example/train`下
-- 第五步：修改`lib/util/load_model`，添加相对应的内容
+- 第二步：写训练配置代码，放到`example/train/config/`下
+- 第三步：写训练启动代码，放到`example/train`下
+- 第四步：修改`lib/util/load_model`，添加相对应的内容
 - 可参考代码：建议参考`qDKT`模型，该模型使用的标准知识追踪数据集和训练器

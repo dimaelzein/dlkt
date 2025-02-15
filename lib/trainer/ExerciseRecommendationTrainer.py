@@ -212,9 +212,9 @@ class ExerciseRecommendationTrainer:
                         if train_strategy["type"] == "valid_test":
                             self.objects["logger"].info(
                                 f"best valid step: {num_step2evaluate * (best_index + 1):<9}\n"
-                                f"valid performance by best valid epoch is "
+                                f"valid performance by best valid is "
                                 f"{json.dumps(best_log_performance['valid_performance'])}\n"
-                                f"test performance by best valid epoch is "
+                                f"test performance by best valid is "
                                 f"{json.dumps(best_log_performance['test_performance'])}\n"
                             )
                         elif train_strategy["type"] == "no_test":
