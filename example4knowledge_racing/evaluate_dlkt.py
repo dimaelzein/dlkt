@@ -3,7 +3,7 @@ import torch
 
 from torch.utils.data import DataLoader
 
-from evaluate_config import evaluate_general_config
+from evaluate_dlkt_config import evaluate_general_config
 
 from lib.util.load_model import load_kt_model
 from lib.dataset.KTDataset import KTDataset
