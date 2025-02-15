@@ -46,8 +46,6 @@ def general_config(local_params, global_params, global_objects):
     num_epoch = local_params["num_epoch"]
     use_early_stop = local_params["use_early_stop"]
     epoch_early_stop = local_params["epoch_early_stop"]
-    use_last_average = local_params["use_last_average"]
-    epoch_last_average = local_params["epoch_last_average"]
     main_metric = local_params["main_metric"]
     use_multi_metrics = local_params["use_multi_metrics"]
     mutil_metrics = local_params["multi_metrics"]
@@ -63,17 +61,11 @@ def general_config(local_params, global_params, global_objects):
         train_strategy_config["multi_metrics"] = [main_metric]
 
     train_strategy_config["type"] = train_strategy_type
-    train_strategy_config[train_strategy_type] = {}
-    if train_strategy_type == "valid_test":
-        train_strategy_config["valid_test"]["use_early_stop"] = use_early_stop
-        if use_early_stop:
-            train_strategy_config["valid_test"]["epoch_early_stop"] = epoch_early_stop
-    elif train_strategy_type == "no_valid":
-        train_strategy_config["no_valid"]["use_average"] = use_last_average
-        if use_last_average:
-            train_strategy_config["no_valid"]["epoch_last_average"] = epoch_last_average
-    else:
-        raise NotImplementedError()
+    train_strategy_config["valid_test"] = {}
+    train_strategy_config["no_test"] = {}
+    train_strategy_config["valid_test"]["use_early_stop"] = use_early_stop
+    if use_early_stop:
+        train_strategy_config["valid_test"]["epoch_early_stop"] = epoch_early_stop
 
     # 数据集配置
     setting_name = local_params["setting_name"]
@@ -88,12 +80,12 @@ def general_config(local_params, global_params, global_objects):
     }
     datasets_config = global_params["datasets_config"]
     datasets_config["train"]["setting_name"] = setting_name
-    datasets_config["test"]["setting_name"] = setting_name
     datasets_config["valid"]["setting_name"] = setting_name
-    if train_strategy_config["type"] == "valid_test":
-        datasets_config["valid"]["file_name"] = valid_file_name
     datasets_config["train"]["file_name"] = train_file_name
-    datasets_config["test"]["file_name"] = test_file_name
+    datasets_config["valid"]["file_name"] = valid_file_name
+    if train_strategy_config["type"] == "valid_test":
+        datasets_config["test"]["setting_name"] = setting_name
+        datasets_config["test"]["file_name"] = test_file_name
 
     global_objects["logger"].info(
         "basic setting\n"
