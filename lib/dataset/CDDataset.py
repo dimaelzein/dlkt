@@ -43,13 +43,3 @@ class CDDataset(Dataset):
         for k in dataset_converted.keys():
             dataset_converted[k] = torch.tensor(dataset_converted[k]).long().to(self.params["device"])
         self.dataset = dataset_converted
-
-    def get_statics_kt_dataset(self):
-        num_seq = len(self.dataset["mask_seq"])
-        with torch.no_grad():
-            num_sample = torch.sum(self.dataset["mask_seq"][:, 1:]).item()
-            num_interaction = torch.sum(self.dataset["mask_seq"]).item()
-            correct_seq = self.dataset["correct_seq"]
-            mask_bool_seq = torch.ne(self.dataset["mask_seq"], 0)
-            num_correct = torch.sum(torch.masked_select(correct_seq, mask_bool_seq)).item()
-        return num_seq, num_sample, num_correct / num_interaction

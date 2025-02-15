@@ -39,8 +39,6 @@ class DKT(nn.Module):
             self.encoder_layer = nn.LSTM(dim_emb, dim_latent, batch_first=True, num_layers=num_rnn_layer)
         else:
             self.encoder_layer = nn.GRU(dim_emb, dim_latent, batch_first=True, num_layers=num_rnn_layer)
-        self.encoder_layer = self.encoder_layer
-
         self.predict_layer = PredictorLayer(self.params, self.objects)
 
     def get_concept_emb4single_concept(self, batch):
@@ -88,13 +86,10 @@ class DKT(nn.Module):
 
     def get_predict_loss(self, batch):
         mask_bool_seq = torch.ne(batch["mask_seq"], 0)
-
         predict_score_result = self.get_predict_score(batch)
         predict_score = predict_score_result["predict_score"]
         ground_truth = torch.masked_select(batch["correct_seq"][:, 1:], mask_bool_seq[:, 1:])
-
         predict_loss = nn.functional.binary_cross_entropy(predict_score.double(), ground_truth.double())
-
         num_sample = torch.sum(batch["mask_seq"][:, 1:]).item()
         return {
             "total_loss": predict_loss,
@@ -136,3 +131,37 @@ class DKT(nn.Module):
         predict_score = torch.sum(predict_score, dim=1)
 
         return predict_score
+
+    def get_last_concept_mastery_level(self, batch):
+        encoder_config = self.params["models_config"]["kt_model"]["encoder_layer"]["DKT"]
+        num_concept = encoder_config["num_concept"]
+        use_concept = encoder_config["use_concept"]
+        dim_emb = encoder_config["dim_emb"]
+        data_type = self.params["datasets_config"]["data_type"]
+
+        self.encoder_layer.flatten_parameters()
+        batch_size = batch["correct_seq"].shape[0]
+        first_index = torch.arange(batch_size).long().to(self.params["device"])
+        if use_concept:
+            if data_type != "only_question":
+                interaction_seq = batch["concept_seq"] + num_concept * batch["correct_seq"]
+                interaction_emb = self.embed_layer.get_emb("interaction", interaction_seq)
+                latent, _ = self.encoder_layer(interaction_emb)
+                last_latent = latent[first_index, batch["seq_len"] - 2]
+                last_mlkc = self.predict_layer(last_latent)
+            else:
+                all_concept_id = torch.arange(num_concept).long().to(self.params["device"])
+                all_concept_emb = self.embed_layer.get_emb("concept", all_concept_id)
+                correct_emb = batch["correct_seq"].reshape(-1, 1).repeat(1, dim_emb).reshape(batch_size, -1, dim_emb)
+                concept_emb = self.get_concept_emb4only_question(batch)
+                interaction_emb = torch.cat((concept_emb[:, :-1], correct_emb[:, :-1]), dim=2)
+                latent, _ = self.encoder_layer(interaction_emb)
+                last_latent = latent[first_index, batch["seq_len"] - 2]
+                last_latent_expanded = last_latent.repeat_interleave(num_concept, dim=0).view(batch_size, num_concept, -1)
+                all_concept_emb_expanded = all_concept_emb.expand(batch_size, -1, -1)
+                predict_layer_input = torch.cat([last_latent_expanded, all_concept_emb_expanded], dim=-1)
+                last_mlkc = self.predict_layer(predict_layer_input).squeeze(dim=-1)
+        else:
+            raise NotImplementedError("must use concept")
+
+        return last_mlkc

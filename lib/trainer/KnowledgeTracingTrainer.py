@@ -360,15 +360,6 @@ class KnowledgeTracingTrainer:
             self.objects["logger"].info(
                 f"{get_now_time()} epoch {self.train_record.get_current_epoch():<3} , valid performance is "
                 f"{valid_performance_str}train loss is {self.loss_record.get_str()}")
-            self.loss_record.clear_loss()
-            current_epoch = self.train_record.get_current_epoch()
-            if best_epoch == current_epoch:
-                # 节省显存
-                self.best_model = deepcopy(model).to("cpu")
-                if save_model:
-                    save_model_dir = self.params["save_model_dir"]
-                    model_weight_path = os.path.join(save_model_dir, "saved.ckt")
-                    torch.save({"best_valid": model.state_dict()}, model_weight_path)
         else:
             data_loader = data_loaders["valid_loader"]
             valid_performance = self.evaluate_kt_dataset(model, data_loader)
@@ -416,27 +407,28 @@ class KnowledgeTracingTrainer:
                 f"{get_now_time()} epoch {self.train_record.get_current_epoch():<3} , valid performance is "
                 f"{valid_performance_str}train loss is {self.loss_record.get_str()}, test performance is "
                 f"{test_performance_str}current best epoch is {best_epoch}")
-            self.loss_record.clear_loss()
-            current_epoch = self.train_record.get_current_epoch()
-            if best_epoch == current_epoch:
-                # 节省显存
-                self.best_model = deepcopy(model).to("cpu")
-                if save_model:
-                    save_model_dir = self.params["save_model_dir"]
-                    model_weight_path = os.path.join(save_model_dir, "saved.ckt")
-                    torch.save({"best_valid": model.state_dict()}, model_weight_path)
+        self.loss_record.clear_loss()
+        current_epoch = self.train_record.get_current_epoch()
+        if best_epoch == current_epoch:
+            # 节省显存
+            self.best_model = deepcopy(model).to("cpu")
+            if save_model:
+                save_model_dir = self.params["save_model_dir"]
+                model_weight_path = os.path.join(save_model_dir, "saved.ckt")
+                torch.save({"best_valid": model.state_dict()}, model_weight_path)
 
     def print_data_statics(self):
         train_strategy = self.params["train_strategy"]
         train_loader = self.objects["data_loaders"]["train_loader"]
-        test_loader = self.objects["data_loaders"]["test_loader"]
+        valid_loader = self.objects["data_loaders"]["valid_loader"]
 
         self.objects["logger"].info("")
         train_statics = train_loader.dataset.get_statics_kt_dataset()
         self.objects["logger"].info(f"train, seq: {train_statics[0]}, sample: {train_statics[1]}, accuracy: {train_statics[2]:<.4}")
-        valid_statics = self.objects["data_loaders"]["valid_loader"].dataset.get_statics_kt_dataset()
+        valid_statics = valid_loader.dataset.get_statics_kt_dataset()
         self.objects["logger"].info(f"valid, seq: {valid_statics[0]}, sample: {valid_statics[1]}, accuracy: {valid_statics[2]:<.4}")
         if train_strategy["type"] == "valid_test":
+            test_loader = self.objects["data_loaders"]["test_loader"]
             test_statics = test_loader.dataset.get_statics_kt_dataset()
             self.objects["logger"].info(f"test, seq: {test_statics[0]}, sample: {test_statics[1]}, accuracy: {test_statics[2]:<.4}")
 
@@ -470,10 +462,17 @@ class KnowledgeTracingTrainer:
             predict_score_all = np.concatenate(predict_score_all, axis=0)
             ground_truth_all = np.concatenate(ground_truth_all, axis=0)
             predict_label_all = [1 if p >= 0.5 else 0 for p in predict_score_all]
-            AUC = roc_auc_score(y_true=ground_truth_all, y_score=predict_score_all)
-            ACC = accuracy_score(y_true=ground_truth_all, y_pred=predict_label_all)
-            MAE = mean_absolute_error(y_true=ground_truth_all, y_pred=predict_score_all)
-            RMSE = mean_squared_error(y_true=ground_truth_all, y_pred=predict_score_all) ** 0.5
+            if model.model_name != "DKT_KG4EX":
+                AUC = roc_auc_score(y_true=ground_truth_all, y_score=predict_score_all)
+                ACC = accuracy_score(y_true=ground_truth_all, y_pred=predict_label_all)
+                MAE = mean_absolute_error(y_true=ground_truth_all, y_pred=predict_score_all)
+                RMSE = mean_squared_error(y_true=ground_truth_all, y_pred=predict_score_all) ** 0.5
+            else:
+                pkc_ground_truth = [1]*len(predict_score_all)
+                AUC = 0.0
+                ACC = accuracy_score(y_true=pkc_ground_truth, y_pred=predict_label_all)
+                MAE = mean_absolute_error(y_true=pkc_ground_truth, y_pred=predict_score_all)
+                RMSE = mean_squared_error(y_true=pkc_ground_truth, y_pred=predict_score_all) ** 0.5
 
             performance_result["AUC"] = AUC
             performance_result["ACC"] = ACC

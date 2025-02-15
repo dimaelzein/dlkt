@@ -110,18 +110,13 @@ class CognitiveDiagnosisTrainer:
         train_loader = data_loaders["train_loader"]
         model = self.objects["models"]["cd_model"]
         train_performance = self.evaluate_cd_dataset(model, train_loader)
-        if train_strategy["type"] == "no_valid":
-            # 无验证集，只有测试集
-            data_loader = data_loaders["test_loader"]
-            test_performance = self.evaluate_cd_dataset(model, data_loader)
-            self.train_record.next_epoch(train_performance, test_performance)
-        else:
+        if train_strategy["type"] == "valid_test":
             # 有验证集，同时在验证集和测试集上测试
             data_loader = data_loaders["valid_loader"]
             valid_performance = self.evaluate_cd_dataset(model, data_loader)
             data_loader = data_loaders["test_loader"]
             test_performance = self.evaluate_cd_dataset(model, data_loader)
-            self.train_record.next_epoch(train_performance, test_performance, valid_performance)
+            self.train_record.next_epoch(train_performance, valid_performance, test_performance)
             valid_performance_str = self.train_record.get_performance_str("valid")
             test_performance_str = self.train_record.get_performance_str("test")
             best_epoch = self.train_record.get_best_epoch("valid")
@@ -129,28 +124,38 @@ class CognitiveDiagnosisTrainer:
                 f"{get_now_time()} epoch {self.train_record.get_current_epoch():<3} , valid performance is "
                 f"{valid_performance_str}train loss is {self.loss_record.get_str()}, test performance is "
                 f"{test_performance_str}current best epoch is {best_epoch}")
-            self.loss_record.clear_loss()
-            current_epoch = self.train_record.get_current_epoch()
-            if best_epoch == current_epoch:
-                if save_model:
-                    save_model_dir = self.params["save_model_dir"]
-                    model_weight_path = os.path.join(save_model_dir, "saved.ckt")
-                    torch.save({"best_valid": model.state_dict()}, model_weight_path)
+        else:
+            # 无测试集
+            data_loader = data_loaders["valid_loader"]
+            valid_performance = self.evaluate_cd_dataset(model, data_loader)
+            self.train_record.next_epoch(train_performance, valid_performance)
+            valid_performance_str = self.train_record.get_performance_str("valid")
+            best_epoch = self.train_record.get_best_epoch("valid")
+            self.objects["logger"].info(
+                f"{get_now_time()} epoch {self.train_record.get_current_epoch():<3} , valid performance is "
+                f"{valid_performance_str}train loss is {self.loss_record.get_str()}current best epoch is {best_epoch}")
+
+        self.loss_record.clear_loss()
+        current_epoch = self.train_record.get_current_epoch()
+        if best_epoch == current_epoch:
+            if save_model:
+                save_model_dir = self.params["save_model_dir"]
+                model_weight_path = os.path.join(save_model_dir, "saved.ckt")
+                torch.save({"best_valid": model.state_dict()}, model_weight_path)
 
     def print_data_statics(self):
         train_strategy = self.params["train_strategy"]
         train_loader = self.objects["data_loaders"]["train_loader"]
-        test_loader = self.objects["data_loaders"]["test_loader"]
-
+        valid_loader = self.objects["data_loaders"]["valid_loader"]
         self.objects["logger"].info("")
         if train_strategy["type"] == "valid_test":
-            valid_loader = self.objects["data_loaders"]["valid_loader"]
+            test_loader = self.objects["data_loaders"]["test_loader"]
             self.objects["logger"].info(f"train, sample: {len(train_loader.dataset)}\n"
                                         f"valid, sample: {len(valid_loader.dataset)}\n"
                                         f"test, sample: {len(test_loader.dataset)}")
         else:
             self.objects["logger"].info(f"train, sample: {len(train_loader.dataset)}\n"
-                                        f"test, sample: {len(test_loader.dataset)}")
+                                        f"valid, sample: {len(valid_loader.dataset)}")
         self.objects["logger"].info("")
 
     @staticmethod

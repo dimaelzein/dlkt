@@ -14,8 +14,6 @@ class Evaluator:
         self.objects = objects
 
     def evaluate(self):
-        transfer_head2zero = self.params.get("transfer_head2zero", {"use_transfer": False})
-        use_transfer = transfer_head2zero["use_transfer"]
         fine_grain_config = self.params["evaluate"]["fine_grain"]
         max_seq_len = fine_grain_config["max_seq_len"]
         seq_len_absolute = fine_grain_config["seq_len_absolute"]

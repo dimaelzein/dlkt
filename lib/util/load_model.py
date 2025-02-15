@@ -28,6 +28,7 @@ from ..model.DKT_QUE import DKT_QUE
 from ..model.DKVMN_QUE import DKVMN_QUE
 from ..model.AKT_QUE import AKT_QUE
 from ..model.DIMKT_QUE import DIMKT_QUE
+from ..model.DKT_KG4EX import DKT_KG4EX
 
 
 model_table = {
@@ -55,7 +56,8 @@ model_table = {
     "DKT_QUE": DKT_QUE,
     "DKVMN_QUE": DKVMN_QUE,
     "AKT_QUE": AKT_QUE,
-    "DIMKT_QUE": DIMKT_QUE
+    "DIMKT_QUE": DIMKT_QUE,
+    "DKT_KG4EX": DKT_KG4EX
 }
 
 
@@ -64,9 +66,6 @@ def load_kt_model(global_params, global_objects, save_model_dir, ckt_name="saved
     saved_params = load_json(params_path)
     global_params["models_config"] = str_dict2params(saved_params["models_config"])
     global_params["other"] = str_dict2params(saved_params["other"])
-    # global_params["LLM_emb_init"] = str_dict2params(saved_params["LLM_emb_init"])
-    global_params["use_LLM_emb4question"] = eval(saved_params.get("use_LLM_emb4question", False))
-    global_params["use_LLM_emb4concept"] = eval(saved_params.get("use_LLM_emb4concept", False))
 
     ckt_path = os.path.join(save_model_dir, ckt_name)
     kt_model_name = os.path.basename(save_model_dir).split("@@")[0]
@@ -86,7 +85,7 @@ def load_kt_model(global_params, global_objects, save_model_dir, ckt_name="saved
         q_matrix[q_matrix > 1] = 1
     model = model_class(global_params, global_objects).to(global_params["device"])
     if global_params["device"] == "cpu":
-        saved_ckt = torch.load(ckt_path, map_location=torch.device('cpu'))
+        saved_ckt = torch.load(ckt_path, map_location=torch.device('cpu'), weights_only=False)
     else:
         saved_ckt = torch.load(ckt_path)
     model.load_state_dict(saved_ckt[model_name_in_ckt])

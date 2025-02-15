@@ -4,9 +4,9 @@ class TrainRecord:
         self.objects = objects
         self.record = {
             "current_epoch": 0,
-            "best_train_main_metric": 0,
-            "best_valid_main_metric": 0,
-            "best_test_main_metric": 0,
+            "best_train_main_metric": -100,
+            "best_valid_main_metric": -100,
+            "best_test_main_metric": -100,
             "best_epoch_by_train": 1,
             "best_epoch_by_valid": 1,
             "best_epoch_by_test": 1,
@@ -39,8 +39,10 @@ class TrainRecord:
         use_multi_metrics = self.params["train_strategy"]["use_multi_metrics"]
         main_metric_key = self.params["train_strategy"]["main_metric"]
         multi_metrics = self.params["train_strategy"]["multi_metrics"]
-        main_metric = self.cal_main_metric(performance, multi_metrics) if use_multi_metrics else (
-            performance)[main_metric_key]
+        if use_multi_metrics:
+            main_metric = self.cal_main_metric(performance, multi_metrics)
+        else:
+            main_metric = (-1 if main_metric_key in ["RMSE", "MAE"] else 1) * performance[main_metric_key]
         performance["main_metric"] = main_metric
 
         if update_type == "train":
@@ -68,8 +70,9 @@ class TrainRecord:
             performance = self.record["performance_valid"][index]
         else:
             performance = self.record["performance_test"][index]
-        result = (f"main metric: {performance['main_metric']:<9.5}, AUC: {performance['AUC']:<9.5}, "
-                  f"ACC: {performance['ACC']:<9.5}, RMSE: {performance['RMSE']:<9.5}, MAE: {performance['MAE']:<9.5}, ")
+        result = f"main metric: {performance['main_metric']:<9.5}, "
+        for metric_name, metric_value in performance.items():
+            result += f"{metric_name}: {metric_value:<9.5}, "
         return result
 
     def stop_training(self):
@@ -101,8 +104,9 @@ class TrainRecord:
         else:
             performance_index = self.record["best_epoch_by_test"] - 1
         performance = all_performance[performance_index]
-        result = (f"main metric: {performance['main_metric']:<9.5}, AUC: {performance['AUC']:<9.5}, "
-                  f"ACC: {performance['ACC']:<9.5}, RMSE: {performance['RMSE']:<9.5}, MAE: {performance['MAE']:<9.5}, ")
+        result = f"main metric: {performance['main_metric']:<9.5}, "
+        for metric_name, metric_value in performance.items():
+            result += f"{metric_name}: {metric_value:<9.5}, "
         return result
 
     def get_evaluate_result(self, performance_type, performance_by):
@@ -131,11 +135,9 @@ class TrainRecord:
         """
         final_metric = 0
         for metric_key, metric_weight in multi_metrics:
-            if metric_key in ["AUC", "ACC"]:
-                final_metric += performance[metric_key] * metric_weight
-            elif metric_key in ["MAE", "RMSE"]:
+            if metric_key in ["MAE", "RMSE"]:
                 final_metric -= performance[metric_key] * metric_weight
             else:
-                assert False, f"no metric named {metric_key}"
+                final_metric += performance[metric_key] * metric_weight
 
         return final_metric

@@ -4,7 +4,6 @@ from torch_geometric.nn.dense.linear import Linear
 
 import torch.nn.functional as F
 from torch import Tensor
-from torch_sparse import matmul
 from torch_geometric.nn.aggr import MultiAggregation
 from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.utils import bipartite_subgraph
@@ -331,7 +330,7 @@ class SAGEConv4GIKT(MessagePassing):
 
     def message_and_aggregate(self, adj_t, x):
         adj_t = adj_t.set_value(None, layout=None)
-        return matmul(adj_t, x[0], reduce=self.aggr)
+        return torch.sparse.mm(adj_t, x[0], reduce=self.aggr)
 
     def __repr__(self) -> str:
         return (f'{self.__class__.__name__}({self.in_channels}, '
