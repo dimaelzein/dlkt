@@ -16,12 +16,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # 数据集相关
     parser.add_argument("--setting_name", type=str, default="our_setting")
-    parser.add_argument("--dataset_name", type=str, default="xes3g5m")
-    parser.add_argument("--data_type", type=str, default="only_question",
-                        choices=("single_concept", "only_question"))
-    parser.add_argument("--train_file_name", type=str, default="xes3g5m_train_fold_0.txt")
-    parser.add_argument("--valid_file_name", type=str, default="xes3g5m_valid_fold_0.txt")
-    parser.add_argument("--test_file_name", type=str, default="xes3g5m_test_fold_0.txt")
+    parser.add_argument("--dataset_name", type=str, default="statics2011")
+    parser.add_argument("--data_type", type=str, default="single_concept",
+                        choices=("multi_concept", "single_concept", "only_question"))
+    parser.add_argument("--train_file_name", type=str, default="statics2011_train_fold_0.txt")
+    parser.add_argument("--valid_file_name", type=str, default="statics2011_valid_fold_0.txt")
+    parser.add_argument("--test_file_name", type=str, default="statics2011_test_fold_0.txt")
     # 优化器相关参数选择
     parser.add_argument("--optimizer_type", type=str, default="adam",
                         choices=("adam", "sgd"))
@@ -57,14 +57,12 @@ if __name__ == "__main__":
     parser.add_argument("--num_min_question", type=int, default=30)
     parser.add_argument("--num_min_concept", type=int, default=30)
     # 模型参数
-    parser.add_argument("--num_concept", type=int, default=865)
-    parser.add_argument("--num_question", type=int, default=7652)
     parser.add_argument("--use_concept", type=str2bool, default=False)
     parser.add_argument("--que_emb_file_name", type=str, default="qid2content_sol_avg_emb.json",
                         help="放在dataset_preprocessed对应数据集目录下")
     parser.add_argument("--frozen_que_emb", type=str2bool, default=True,
                         help="是否固定预训练的question emb")
-    parser.add_argument("--dim_emb", type=int, default=128)
+    parser.add_argument("--dim_emb", type=int, default=64)
     parser.add_argument("--num_question_diff", type=int, default=100)
     parser.add_argument("--num_concept_diff", type=int, default=100)
     parser.add_argument("--dropout", type=float, default=0.2)

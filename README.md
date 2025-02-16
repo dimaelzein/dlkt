@@ -1,7 +1,7 @@
 [Document] | [Datasets]  | [Experiement]
 
 [Document]: md_doc/DOC.md
-[Datasets]: md_doc/KT_DATASETS.md
+[Datasets]: md_doc/DATASETS.md
 [Experiement]: md_doc/Experiement.md
 # Introduction
 

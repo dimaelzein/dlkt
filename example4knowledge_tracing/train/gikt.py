@@ -55,9 +55,7 @@ if __name__ == "__main__":
     # 使用纯torch写的或者pyg写的GIKT
     parser.add_argument("--use_pyg", type=str2bool, default=True)
     # 模型参数
-    parser.add_argument("--num_concept", type=int, default=27)
-    parser.add_argument("--num_question", type=int, default=1223)
-    parser.add_argument("--dim_emb", type=int, default=100)
+    parser.add_argument("--dim_emb", type=int, default=64)
     parser.add_argument("--num_q_neighbor", type=int, default=4)
     parser.add_argument("--num_c_neighbor", type=int, default=10)
     parser.add_argument("--agg_hops", type=int, default=3)

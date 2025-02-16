@@ -18,12 +18,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # 数据集相关
     parser.add_argument("--setting_name", type=str, default="our_setting")
-    parser.add_argument("--dataset_name", type=str, default="xes3g5m")
-    parser.add_argument("--data_type", type=str, default="only_question",
-                        choices=("single_concept", "only_question"))
-    parser.add_argument("--train_file_name", type=str, default="xes3g5m_train_fold_0.txt")
-    parser.add_argument("--valid_file_name", type=str, default="xes3g5m_valid_fold_0.txt")
-    parser.add_argument("--test_file_name", type=str, default="xes3g5m_test_fold_0.txt")
+    parser.add_argument("--dataset_name", type=str, default="statics2011")
+    parser.add_argument("--data_type", type=str, default="single_concept",
+                        choices=("multi_concept", "single_concept", "only_question"))
+    parser.add_argument("--train_file_name", type=str, default="statics2011_train_fold_0.txt")
+    parser.add_argument("--valid_file_name", type=str, default="statics2011_valid_fold_0.txt")
+    parser.add_argument("--test_file_name", type=str, default="statics2011_test_fold_0.txt")
     # 优化器相关参数选择
     parser.add_argument("--optimizer_type", type=str, default="adam", choices=("adam", "sgd"))
     parser.add_argument("--weight_decay", type=float, default=0)
@@ -59,7 +59,6 @@ if __name__ == "__main__":
                         help="放在dataset_preprocessed对应数据集目录下")
     parser.add_argument("--frozen_que_emb", type=str2bool, default=True,
                         help="是否固定预训练的question emb")
-    parser.add_argument("--num_question", type=int, default=7652)
     parser.add_argument("--dim_model", type=int, default=64)
     parser.add_argument("--key_query_same", type=str2bool, default=True)
     parser.add_argument("--num_head", type=int, default=4)
@@ -82,7 +81,7 @@ if __name__ == "__main__":
     # 其它
     parser.add_argument("--save_model", type=str2bool, default=False)
     parser.add_argument("--debug_mode", type=str2bool, default=False)
-    parser.add_argument("--trace_epoch", type=str2bool, default=True)
+    parser.add_argument("--trace_epoch", type=str2bool, default=False)
     parser.add_argument("--use_cpu", type=str2bool, default=False)
     parser.add_argument("--seed", type=int, default=0)
 

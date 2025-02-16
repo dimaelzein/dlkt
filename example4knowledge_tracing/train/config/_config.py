@@ -128,6 +128,12 @@ def general_config(local_params, global_params, global_objects):
     global_objects["data"] = {}
     global_objects["data"]["Q_table"] = Q_table
     if Q_table is not None:
+        if local_params["dataset_name"] == "assist2015":
+            local_params["num_question"], local_params["num_concept"] = 100, 1
+        elif local_params["dataset_name"] == "poj":
+            local_params["num_question"], local_params["num_concept"] = 2750, 1
+        else:
+            local_params["num_question"], local_params["num_concept"] = Q_table.shape[0], Q_table.shape[1]
         global_objects["data"]["Q_table_tensor"] = \
             torch.from_numpy(global_objects["data"]["Q_table"]).long().to(global_params["device"])
         # 如果有Q table的话，可以分析出question2concept_list和concept2question_list

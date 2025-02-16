@@ -15,12 +15,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # 数据集相关
     parser.add_argument("--setting_name", type=str, default="our_setting")
-    parser.add_argument("--dataset_name", type=str, default="xes3g5m")
-    parser.add_argument("--data_type", type=str, default="only_question",
+    parser.add_argument("--dataset_name", type=str, default="statics2011")
+    parser.add_argument("--data_type", type=str, default="single_concept",
                         choices=("multi_concept", "single_concept", "only_question"))
-    parser.add_argument("--train_file_name", type=str, default="xes3g5m_train_fold_0.txt")
-    parser.add_argument("--valid_file_name", type=str, default="xes3g5m_valid_fold_0.txt")
-    parser.add_argument("--test_file_name", type=str, default="xes3g5m_test_fold_0.txt")
+    parser.add_argument("--train_file_name", type=str, default="statics2011_train_fold_0.txt")
+    parser.add_argument("--valid_file_name", type=str, default="statics2011_valid_fold_0.txt")
+    parser.add_argument("--test_file_name", type=str, default="statics2011_test_fold_0.txt")
     # 优化器相关参数选择
     parser.add_argument("--optimizer_type", type=str, default="adam", choices=("adam", "sgd"))
     parser.add_argument("--weight_decay", type=float, default=0.0001)
@@ -52,8 +52,6 @@ if __name__ == "__main__":
     parser.add_argument("--enable_clip_grad", type=str2bool, default=False)
     parser.add_argument("--grad_clipped", type=float, default=10.0)
     # 模型参数
-    parser.add_argument("--num_concept", type=int, default=865)
-    parser.add_argument("--num_question", type=int, default=7652)
     parser.add_argument("--dim_concept", type=int, default=64)
     parser.add_argument("--dim_question", type=int, default=64)
     parser.add_argument("--dim_correct", type=int, default=64)
@@ -72,9 +70,9 @@ if __name__ == "__main__":
     parser.add_argument("--IPS_min", type=float, default=0.7)
     parser.add_argument("--IPS_his_seq_len", type=int, default=20)
     # 其它
-    parser.add_argument("--save_model", type=str2bool, default=True)
+    parser.add_argument("--save_model", type=str2bool, default=False)
     parser.add_argument("--debug_mode", type=str2bool, default=False)
-    parser.add_argument("--trace_epoch", type=str2bool, default=True)
+    parser.add_argument("--trace_epoch", type=str2bool, default=False)
     parser.add_argument("--use_cpu", type=str2bool, default=False)
     parser.add_argument("--seed", type=int, default=0)
 

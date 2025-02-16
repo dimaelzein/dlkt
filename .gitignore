@@ -34,3 +34,5 @@ example4cognitive_diagnosis/result_local
 *.pyc
 *.DS_Store
 **/.DS_Store
+
+**/*_local.py
