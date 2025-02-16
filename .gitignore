@@ -8,18 +8,18 @@ back_up/
 paper/
 
 deploy
-example4knowledge_racing/result_cluster
-example4knowledge_racing/result_server
-example4knowledge_racing/result_local
-example4knowledge_racing/script_cluster
-example4knowledge_racing/script_local
-example4knowledge_racing/script_server
+example4knowledge_tracing/result_cluster
+example4knowledge_tracing/result_server
+example4knowledge_tracing/result_local
+example4knowledge_tracing/script_cluster
+example4knowledge_tracing/script_local
+example4knowledge_tracing/script_server
 
 example4cognitive_diagnosis/result_cluster
 example4cognitive_diagnosis/result_server
 example4cognitive_diagnosis/result_local
 
-/example4knowledge_racing/train/bkt.py
+/example4knowledge_tracing/train/bkt.py
 /settings.json
 /*.ipynb
 /note.md

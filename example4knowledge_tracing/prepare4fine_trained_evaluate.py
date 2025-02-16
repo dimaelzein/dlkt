@@ -83,9 +83,9 @@ if __name__ == "__main__":
 
     parser.add_argument("--target_file_path", type=str,
                         help="用于从数据中提取信息，如每道习题出现的频率（长尾问题），准确率（偏差问题）",
-                        default=r"/Users/dream/myProjects/dlkt-release/example4knowledge_racing/lab/settings/our_setting/statics2011_train_fold_0.txt")
+                        default=r"/Users/dream/myProjects/dlkt-release/example4knowledge_tracing/lab/settings/our_setting/statics2011_train_fold_0.txt")
     # 数据集信息
-    parser.add_argument("--preprocessed_dir", type=str, default=r"/Users/dream/myProjects/dlkt-release/example4knowledge_racing/lab/dataset_preprocessed")
+    parser.add_argument("--preprocessed_dir", type=str, default=r"/Users/dream/myProjects/dlkt-release/example4knowledge_tracing/lab/dataset_preprocessed")
     parser.add_argument("--dataset_name", type=str, default="statics2011")
     parser.add_argument("--data_type", type=str, default="single_concept",
                         choices=("multi_concept", "single_concept", "only_question"))
