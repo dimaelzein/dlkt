@@ -29,7 +29,7 @@ lib/unit_test
 /.DS_Store
 /freeze.yml
 /keys.json
-/parse_result_local.py
+/parse_result.py
 
 
 
