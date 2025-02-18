@@ -5,19 +5,9 @@ import numpy as np
 
 import config
 
+from lib.util.data import read_mlkc_data
 from lib.util.parse import question2concept_from_Q
 from lib.util.FileManager import FileManager
-
-
-def read_data(f_path):
-    data = {}
-    with open(f_path, "r") as f:
-        lines = f.readlines()
-    for line in lines:
-        line_ = line.split(":")
-        user_id, data_value = line_[0], line_[1]
-        data[int(user_id)] = list(map(float, data_value.split(",")))
-    return data
 
 
 def cosine_similarity(list1, list2):
@@ -100,17 +90,17 @@ if __name__ == "__main__":
     target_dir = params["target_dir"]
     dataset_name = params["dataset_name"]
 
-    mlkc_train = read_data(os.path.join(target_dir, f"{dataset_name}_mlkc_train.txt"))
-    mlkc_valid = read_data(os.path.join(target_dir, f"{dataset_name}_mlkc_valid.txt"))
-    mlkc_test = read_data(os.path.join(target_dir, f"{dataset_name}_mlkc_test.txt"))
+    mlkc_train = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_mlkc_train.txt"))
+    mlkc_valid = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_mlkc_valid.txt"))
+    mlkc_test = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_mlkc_test.txt"))
 
-    pkc_train = read_data(os.path.join(target_dir, f"{dataset_name}_pkc_train.txt"))
-    pkc_valid = read_data(os.path.join(target_dir, f"{dataset_name}_pkc_valid.txt"))
-    pkc_test = read_data(os.path.join(target_dir, f"{dataset_name}_pkc_test.txt"))
+    pkc_train = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_pkc_train.txt"))
+    pkc_valid = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_pkc_valid.txt"))
+    pkc_test = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_pkc_test.txt"))
 
-    efr_train = read_data(os.path.join(target_dir, f"{dataset_name}_efr_train.txt"))
-    efr_valid = read_data(os.path.join(target_dir, f"{dataset_name}_efr_valid.txt"))
-    efr_test = read_data(os.path.join(target_dir, f"{dataset_name}_efr_test.txt"))
+    efr_train = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_efr_train.txt"))
+    efr_valid = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_efr_valid.txt"))
+    efr_test = read_mlkc_data(os.path.join(target_dir, f"{dataset_name}_efr_test.txt"))
 
     rec_ex_train = {}
     train_user_ids = mlkc_train.keys()

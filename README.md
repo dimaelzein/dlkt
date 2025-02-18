@@ -78,14 +78,21 @@ A library of algorithms for reproducing knowledge tracing, cognitive diagnosis, 
    python kg4ex_setting.py
    ```
 
-2. Train model, Run the file under `example4cognitive_diagnosis/train`. For example, train a KG4EX model
+2. Train or evaluate different model or method
 
-   - step 1, train a `DKT` model to get mlkc
-   - step 2, train a `DKT_KG4EX` model to get pkc
-   - step 3, run `example4exercise_recommendation/kg4ex/get_mlkc_pkc.py`
-   - step 4, run `example4exercise_recommendation/kg4ex/get_efr.py`
-   - step 5, run `example4exercise_recommendation/kg4ex/get_triples.py`
-   - step 6, run `example4exercise_recommendation/train/kg4ex.py`
+   1. KG4EX
+      - step 1, train a `DKT` model to get mlkc
+      - step 2, train a `DKT_KG4EX` model to get pkc
+      - step 3, run `example4exercise_recommendation/kg4ex/get_mlkc_pkc.py`
+      - step 4, run `example4exercise_recommendation/kg4ex/get_efr.py`
+      - step 5, run `example4exercise_recommendation/kg4ex/get_triples.py`
+      - step 6, run `example4exercise_recommendation/train/kg4ex.py`
+
+   2. EB-CF (Exercise-based collaborative filtering)
+      - step1, change `example4exercise_recommendation/eb_cf/load_data` to get users' history data
+      - step2, run `example4exercise_recommendation/eb_cf/get_que_sim_mat.py` to get questions' similarity matrix
+      - step3, run `example4exercise_recommendation/eb_cf/evaluate.py`
+
 
 # Referrence
 

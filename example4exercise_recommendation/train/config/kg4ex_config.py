@@ -1,6 +1,5 @@
 from ._config import *
 
-from lib.util.basic import *
 from lib.dataset.KG4EXDataset import read_id_map
 
 

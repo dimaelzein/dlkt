@@ -21,6 +21,13 @@ def question2concept_from_Q(Q_table):
     return result
 
 
+def tf_idf_from_Q(Q_table):
+    N = Q_table.shape[0]
+    tf = Q_table
+    idf = np.log(N / Q_table.sum(axis=0))
+    return tf * np.expand_dims(idf, axis=0)
+
+
 def get_concept_from_question(question_id, Q_table):
     return np.argwhere(Q_table[question_id] == 1).reshape(-1).tolist()
 
@@ -276,3 +283,59 @@ def get_statics4lbkt(data_uniformed, use_use_time_first=True):
     num_hint_mean_dict = {k: np.mean(v) for k, v in num_hint_dict.items()}
 
     return use_time_mean_dict, use_time_std_dict, num_attempt_mean_dict, num_hint_mean_dict
+
+
+def cosine_similarity(scores_i, scores_j):
+    # 归一化列向量（除以 L2 范数）
+    scores_i = scores_i / scores_i.sum()
+    scores_j = scores_j / scores_j.sum()
+    return scores_i.T @ scores_j
+
+
+def cosine_similarity_matrix(arr, axis=0):
+    """
+    计算行向量或列向量两两之间的余弦相似度矩阵。
+
+    参数:
+        axis: axis=0 表示按列计算，axis=1 表示按行计算。
+
+    返回:
+        余弦相似度矩阵。
+    """
+    if axis == 1:
+        arr = arr.T  # 转置，将行向量转换为列向量
+
+    # 归一化列向量（除以 L2 范数）
+    norm = np.linalg.norm(arr, axis=0, keepdims=True)  # 计算每列的 L2 范数
+    arr_normalized = arr / norm  # 归一化
+
+    # 计算余弦相似度矩阵
+    cosine_sim = arr_normalized.T @ arr_normalized  # 矩阵乘法计算点积
+
+    return cosine_sim
+
+
+def pearson_similarity(scores_i, scores_j):
+    # 提取共同评分的索引
+    common_users = np.where((scores_i >= 0) & (scores_j >= 0))[0]
+    if len(common_users) == 0:
+        return 0.0  # 无共同评分用户
+
+    # 提取共同评分
+    scores_i = scores_i[common_users]
+    scores_j = scores_j[common_users]
+
+    # 计算均值和差值
+    mean_i = np.mean(scores_i)
+    mean_j = np.mean(scores_j)
+    diff_i = scores_i - mean_i
+    diff_j = scores_j - mean_j
+
+    # 计算分子和分母
+    numerator = np.sum(diff_i * diff_j)
+    denominator = np.sqrt(np.sum(diff_i ** 2)) * np.sqrt(np.sum(diff_j ** 2))
+
+    if denominator == 0:
+        return 0.0  # 避免除以0
+
+    return numerator / denominator

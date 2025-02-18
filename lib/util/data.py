@@ -386,6 +386,17 @@ def read_cd_task_dataset(data_path):
     return data
 
 
+def read_mlkc_data(f_path):
+    data = {}
+    with open(f_path, "r") as f:
+        lines = f.readlines()
+    for line in lines:
+        line_ = line.split(":")
+        user_id, data_value = line_[0], line_[1]
+        data[int(user_id)] = list(map(float, data_value.split(",")))
+    return data
+
+
 def generate_factor4lbkt(data_uniformed, use_time_mean_dict, use_time_std_dict, num_attempt_mean_dict, num_hint_mean_dict,
                          use_use_time_first=True):
     max_seq_len = len(data_uniformed[0]["mask_seq"])
@@ -442,3 +453,22 @@ def generate_factor4lbkt(data_uniformed, use_time_mean_dict, use_time_std_dict, 
 def generate_unique_id(input_str):
     hash_object = hashlib.md5(input_str.encode())
     return hash_object.hexdigest()
+
+
+def kt_data2user_question_matrix(data, num_question, remove_last=1):
+    """
+    构造user-question矩阵，矩阵元素是用户对习题对正确率，如果未作答过，则为-1
+    """
+    num_user = len(data)
+    matrix = np.zeros((num_user, num_question))
+    sum_matrix = np.zeros((num_user, num_question))
+    for item_data in data:
+        user_id = item_data["user_id"]
+        question_seq = item_data["question_seq"][:item_data["seq_len"]-remove_last]
+        correct_seq = item_data["correct_seq"][:item_data["seq_len"] - remove_last]
+        for q_id, correctness in zip(question_seq, correct_seq):
+            matrix[user_id][q_id] += correctness
+            sum_matrix[user_id][q_id] += 1
+    matrix[sum_matrix == 0] = -1
+    sum_matrix[sum_matrix == 0] = 1
+    return matrix / sum_matrix

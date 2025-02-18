@@ -17,6 +17,7 @@ if __name__ == "__main__":
     # 数据集相关
     parser.add_argument("--setting_name", type=str, default="kg4ex_setting")
     parser.add_argument("--dataset_name", type=str, default="statics2011")
+    parser.add_argument("--user_ids_file_name", type=str, default="statics2011_user_ids.json")
     parser.add_argument("--train_file_name", type=str, default="statics2011_train_triples.txt")
     parser.add_argument("--valid_file_name", type=str, default="statics2011_valid_triples.txt")
     parser.add_argument("--test_file_name", type=str, default="statics2011_test_triples.txt")
@@ -95,15 +96,15 @@ if __name__ == "__main__":
     dataloader_tail_train = DataLoader(dataset_tail_train, batch_size=params["train_batch_size"], shuffle=True)
     train_iterator = BidirectionalOneShotIterator(dataloader_head_train, dataloader_tail_train)
 
-    user_ids = load_json(os.path.join(setting_dir, f"{params['dataset_name']}_user_ids.json"))
+    user_ids = load_json(os.path.join(setting_dir, params['user_ids_file_name']))
     global_objects["data"]["user_ids"] = user_ids
 
     dataset_all = read_preprocessed_file(
-        os.path.join(file_manager.get_setting_dir(setting_name), f"{params['dataset_name']}_train.txt")
+        os.path.join(setting_dir, f"{params['dataset_name']}_train.txt")
     ) + read_preprocessed_file(
-        os.path.join(file_manager.get_setting_dir(setting_name), f"{params['dataset_name']}_test.txt")
+        os.path.join(setting_dir, f"{params['dataset_name']}_test.txt")
     ) + read_preprocessed_file(
-        os.path.join(file_manager.get_setting_dir(setting_name), f"{params['dataset_name']}_valid.txt")
+        os.path.join(setting_dir, f"{params['dataset_name']}_valid.txt")
     )
     users_history_answer_all = {}
     for item_data in dataset_all:
