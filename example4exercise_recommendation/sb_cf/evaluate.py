@@ -7,7 +7,7 @@ from load_data import user_ids, users_history
 from rec_strategy import *
 
 from lib.util.data import read_mlkc_data
-from lib.util.parse import question2concept_from_Q
+from lib.util.parse import question2concept_from_Q, cal_diff
 from lib.util.set_up import set_seed
 from lib.dataset.KG4EXDataset import *
 from lib.util.FileManager import FileManager
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # 数据集相关
     parser.add_argument("--setting_name", type=str, default="kg4ex_setting")
     parser.add_argument("--dataset_name", type=str, default="statics2011")
-    parser.add_argument("--que_sim_mat_file_name", type=str, default="que_smi_mat_statics2011_pearson_corr_1_0.25_0.5.npy")
+    parser.add_argument("--que_sim_mat_file_name", type=str, default="user_smi_mat_statics2011_pearson_corr_1_0.25_0.5.npy")
     parser.add_argument("--target", type=str, default="test", help="must in user_ids")
     # 评价指标选择
     parser.add_argument("--used_metrics", type=str, default="['KG4EX_ACC', 'KG4EX_NOV']",
@@ -30,7 +30,9 @@ if __name__ == "__main__":
     parser.add_argument("--delta", type=float, default=0.7)
     # 推荐策略
     parser.add_argument("--rec_strategy", type=int, default=0,
-                        help="0: 推荐和学生最后一次做错习题相似的习题，如果学生历史练习习题全部做对，则推荐和最后练习习题相似的习题")
+                        help="0: 从相似用户的练习习题中找出用户未练习过的习题，并根据用户的难度偏好（如历史平均难度 ± 阈值）筛选习题")
+    parser.add_argument("--method0_diff_threshold", type=float, default=0.1,
+                        help="method 0过滤习题时的难度阈值")
     # 其它
     parser.add_argument("--seed", type=int, default=0)
 
@@ -47,9 +49,23 @@ if __name__ == "__main__":
     question2concept = question2concept_from_Q(Q_table)
     num_question, num_concept = Q_table.shape[0], Q_table.shape[1]
 
+    question_acc = cal_diff(users_history, "question_seq", 0)
+    average_que_acc = sum(question_acc.values()) / len(question_acc)
+    question_diff = {}
+    for q_id in range(num_question):
+        if q_id not in question_acc:
+            question_diff[q_id] = average_que_acc
+        else:
+            question_diff[q_id] = 1 - question_acc[q_id]
+
     users_data = list(filter(lambda x: x["user_id"] in user_ids[params["target"]], users_history))
     que_sim_mat = np.load(os.path.join(setting_dir, params["que_sim_mat_file_name"]))
-    similar_questions = np.argsort(-que_sim_mat, axis=1)[:, 1:]
+    # 理论上只能使用训练集的user
+    train_users_data = list(filter(lambda x: x["user_id"] in user_ids["train"], users_history))
+    que_sim_mat[:, user_ids["train"]] += 100
+    for i in range(len(users_data)):
+        que_sim_mat[i, i] += 1000
+    similar_users = np.argsort(-que_sim_mat, axis=1)[:, 1:len(train_users_data)]
 
     rec_strategy = params["rec_strategy"]
     top_ns = eval(params["top_ns"])
@@ -59,7 +75,8 @@ if __name__ == "__main__":
         last_top_n = top_ns[0]
         for i, top_n in enumerate(top_ns):
             if i == 0:
-                rec_result[top_n] = rec_method_0(users_data, similar_questions, top_n)
+                rec_result[top_n] = rec_method_0(
+                    train_users_data, users_data, similar_users, question_diff, params["method0_diff_threshold"], top_n)
             else:
                 rec_result[top_n] = {
                     user_id: rec_ques[:top_n] for user_id, rec_ques in rec_result[last_top_n].items()}

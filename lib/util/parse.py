@@ -98,7 +98,7 @@ def cal_diff(D, k, min_count2drop):
 
 
 def cal_concept_acc(data_uniformed, params, objects):
-    num_min_concept = params["num_min_concept"]
+    num_min_concept = params.get("num_min_concept", 0)
     num_concept = params["num_concept"]
     data_type = params["data_type"]
 
@@ -106,13 +106,13 @@ def cal_concept_acc(data_uniformed, params, objects):
     concepts_accuracy = {c_id: 0 for c_id in range(num_concept)}
     concept_difficulty = {}
 
-    if data_type == "single_concept":
+    if data_type in ["single_concept", "multi_concept"]:
         for item_data in data_uniformed:
             for i in range(item_data["seq_len"]):
                 c_id = item_data["concept_seq"][i]
                 concepts_frequency[c_id] += 1
                 concepts_accuracy[c_id] += item_data["correct_seq"][i]
-    elif data_type == "only_question":
+    else:
         question2concept = objects["question2concept"]
         for item_data in data_uniformed:
             for i in range(item_data["seq_len"]):
@@ -122,8 +122,6 @@ def cal_concept_acc(data_uniformed, params, objects):
                     concepts_frequency[c_id] += 1
                 for c_id in c_ids:
                     concepts_accuracy[c_id] += item_data["correct_seq"][i]
-    else:
-        raise NotImplementedError()
 
     for c_id in range(num_concept):
         if concepts_frequency[c_id] < num_min_concept:
@@ -317,13 +315,13 @@ def cosine_similarity_matrix(arr, axis=0):
 
 def pearson_similarity(scores_i, scores_j):
     # 提取共同评分的索引
-    common_users = np.where((scores_i >= 0) & (scores_j >= 0))[0]
-    if len(common_users) == 0:
+    common_ids = np.where((scores_i >= 0) & (scores_j >= 0))[0]
+    if len(common_ids) == 0:
         return 0.0  # 无共同评分用户
 
     # 提取共同评分
-    scores_i = scores_i[common_users]
-    scores_j = scores_j[common_users]
+    scores_i = scores_i[common_ids]
+    scores_j = scores_j[common_ids]
 
     # 计算均值和差值
     mean_i = np.mean(scores_i)
