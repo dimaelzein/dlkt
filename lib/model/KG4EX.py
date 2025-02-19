@@ -1,5 +1,4 @@
 import torch
-import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -322,6 +321,7 @@ class KG4EX(nn.Module):
         for top_n in top_ns:
             performance[top_n]["KG4EX_ACC"] = kg4ex_acc(users_mlkc, users_recommended_questions[top_n], q2c, 0.7)
             performance[top_n]["KG4EX_NOV"] = kg4ex_novelty(users_concepts, users_recommended_questions[top_n], q2c)
+            performance[top_n]["PER_IND"] = personalization_index(users_recommended_questions[top_n])
 
         return performance
 

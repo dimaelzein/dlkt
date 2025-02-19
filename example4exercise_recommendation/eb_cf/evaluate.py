@@ -22,8 +22,8 @@ if __name__ == "__main__":
     parser.add_argument("--que_sim_mat_file_name", type=str, default="que_smi_mat_statics2011_pearson_corr_1_0.25_0.5.npy")
     parser.add_argument("--target", type=str, default="test", help="must in user_ids")
     # 评价指标选择
-    parser.add_argument("--used_metrics", type=str, default="['KG4EX_ACC', 'KG4EX_NOV']",
-                        help='KG4EX_ACC, KG4EX_VOL')
+    parser.add_argument("--used_metrics", type=str, default="['KG4EX_ACC', 'KG4EX_NOV', 'PER_IND']",
+                        help='KG4EX_ACC, KG4EX_VOL, PER_IND')
     parser.add_argument("--top_ns", type=str, default="[10,20]")
     # KG4EX_ACC指标需要的数据
     parser.add_argument("--mlkc_file_name", type=str, default="statics2011_mlkc_test.txt")
@@ -72,6 +72,11 @@ if __name__ == "__main__":
     for metric in used_metrics:
         for top_n in top_ns:
             rec_ques = rec_result[top_n]
+            if metric == "PER_IND":
+                rec_ques_ = []
+                for user_id in rec_ques.keys():
+                    rec_ques_.append(rec_ques[user_id])
+                performance[top_n][metric] = personalization_index(rec_ques_)
             if metric == "KG4EX_ACC":
                 mlkc = read_mlkc_data(os.path.join(setting_dir, params["mlkc_file_name"]))
                 rec_ques_ = []

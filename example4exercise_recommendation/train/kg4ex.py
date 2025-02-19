@@ -32,7 +32,7 @@ if __name__ == "__main__":
     parser.add_argument("--use_early_stop", type=str2bool, default=True)
     parser.add_argument("--num_early_stop", type=int, default=5, help="num_early_stop * num_step2evaluate")
     # 评价指标选择
-    parser.add_argument("--main_metric", type=str, default="KG4EX_ACC", choices=("KG4EX_ACC", "KG4EX_VOL"),
+    parser.add_argument("--main_metric", type=str, default="KG4EX_ACC", choices=("KG4EX_ACC", "KG4EX_VOL", "PER_IND"),
                         help="average performance of top_ns")
     parser.add_argument("--use_multi_metrics", type=str2bool, default=False)
     parser.add_argument("--top_ns", type=str, default="[10,20]")
