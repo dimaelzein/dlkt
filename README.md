@@ -93,7 +93,7 @@ A library of algorithms for reproducing knowledge tracing, cognitive diagnosis, 
       - step2, run `example4exercise_recommendation/eb_cf/get_que_sim_mat.py` to get questions' similarity matrix
       - step3, run `example4exercise_recommendation/eb_cf/evaluate.py`
    3. SB-CF (Student-based collaborative filtering)
-      - Similar to EB-CF, run the code in ``example4exercise_recommendation/sb_cf`
+      - Similar to EB-CF, run the code in `example4exercise_recommendation/sb_cf`
 
 
 # Referrence
