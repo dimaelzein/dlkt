@@ -174,12 +174,11 @@
 
 - 论文中报告结果来自 `pyKT`、`SimpleKT`、`AT-DKT` 和 `QIKT`。请参阅[相应的论文](md_doc/MODELS.md)。
 
-- 由于 `ATKT` 的原始代码存在数据泄漏问题，我们使用了 `pyKT` 提供的 `atktfix`。
+- Due to the data leakage issue in the original code of ATKT, we used the atktfix provided by pyKT.
 
-- 下表是在多知识点数据集上的复现结果，请注意：
-
-  1. 我们并没有像 `pyKT` 那样首先将练习序列扩展为知识概念序列（见 `pyKT` 论文图2），然后在知识概念序列上训练模型，最后在问题上测试模型（见 `pyKT` 论文第3.3节）。我们的复现是直接在问题序列上训练和测试模型，也就是说，对于多概念问题，我们使用 `mean pooling` 来处理多个概念嵌入。
-  2. 这种差异不仅体现在模型的训练和测试上，还体现在数据预处理上。`pyKT` 首先扩展序列，然后切分序列，固定每个序列的长度为200。而我们是直接切分序列，固定序列长度为200。
+- The table below shows the replication results on the multi-concept dataset. Please note:
+  1. We did not, like pyKT, first expand the exercise sequence into a knowledge concept sequence (see Figure 2 in the pyKT paper), then train the model on the knowledge concept sequence, and finally test the model on the questions (see Section 3.3 of the pyKT paper). Our replication directly trains and tests the model on the question sequence, meaning that for multi-concept questions, we use mean pooling to handle multiple concept embeddings.
+2. This difference is not only reflected in the model's training and testing but also in the data preprocessing. pyKT first expands the sequences, then splits them, fixing the length of each sequence to 200. However, we directly split the sequences and fix the sequence length to 200.
 
   |          |   Assist2009   |     AL2005     |     BD2006     |    Xes3g5m     |
   | :------: | :------------: | :------------: | :------------: | :------------: |
@@ -189,10 +188,9 @@
   |   QIKT   | 0.7907(0.7878) |      OOM       |      OOM       |      todo      |
   |   qDKT   |     0.7762     |     0.8363     |     0.8144     | 0.8261(0.8225) |
 
-- 下表是在单知识点数据集上的复现结果，请注意：
-
-  1. 对于问题数量较少的数据集，我们的 DKT 和 ATKT 也提供了以问题作为条目的结果。
-  2. 对于 `statics2011` 和 `edi2020-task34` 数据集，我们的数据预处理与 `pyKT` 不同。
+The table below shows the replication results on the single-concept dataset. Please note:
+1. For datasets with fewer questions, our DKT and ATKT also provide results with questions as the entries.
+2. For the statics2011 and edi2020-task34 datasets, our data preprocessing is different from pyKT.
 
 |               |  Statics2011   | NIPS34 (Edi2020-task34) |
 | :-----------: | :------------: | :---------------------: |
@@ -211,7 +209,7 @@
 
 ## Other Setting (Knowledge Tracing)
 
-- 要查看完整的实验记录，请点击[这里](https://docs.qq.com/sheet/DREtXSUtqTkZrTVVY?tab=BB08J2)
+-To view the full experimental records, please click (https://docs.qq.com/sheet/DREtXSUtqTkZrTVVY?tab=BB08J2)
 
 ## NCD Setting (Cognitive Diagnosis)
 
