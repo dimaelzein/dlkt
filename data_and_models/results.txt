@@ -1,0 +1,2 @@
+First Results: 
+2025-03-13 23:47:48 epoch 4   , valid performance is main metric: 0.68374  , AUC: 0.68374  , ACC: 0.68405  , MAE: 0.40945  , RMSE: 0.45824  , main_metric: 0.68374  , train loss is predict loss: 1.6558      , test performance is main metric: 0.66905  , AUC: 0.66905  , ACC: 0.67726  , MAE: 0.41378  , RMSE: 0.46181  , main_metric: 0.66905  , current best epoch is 4

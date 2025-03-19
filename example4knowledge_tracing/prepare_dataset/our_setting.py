@@ -12,7 +12,7 @@ from lib.dataset.split_dataset import n_fold_split2
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset_name", type=str, default="moocradar-C_746997",
+    parser.add_argument("--dataset_name", type=str, default="assist2009",
                         choices=("assist2009", "assist2012", "assist2017", "edi2020-task1", "edi2020-task34",
                                  "ednet-kt1", "xes3g5m", "statics2011", "slepemapy-anatomy", "junyi2015",
                                  "moocradar-C_746997"))
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     params["setting_name"] = "our_setting"
     if params["dataset_name"] in ["assist2012", "assist2017", "edi2020-task34", "edi2020-task1", "statics2011",
                                   "slepemapy", "junyi2015", "SLP-his", "SLP-phy"]:
-        params["data_type"] = "single_concept"
+        params["data_type"] = "multi_concept"
     else:
         params["data_type"] = "only_question"
     params["max_seq_len"] = 200

@@ -1,6 +1,7 @@
 import torch
 import os
 import torch.nn as nn
+import config
 
 from sklearn.metrics import roc_auc_score, accuracy_score, mean_absolute_error, mean_squared_error
 from copy import deepcopy
@@ -69,6 +70,24 @@ class KnowledgeTracingTrainer:
                 else:
                     schedulers[model_name] = None
 
+    def check_concept_seq_in_loader(self):
+        train_loader = self.objects["data_loaders"]["train_loader"]
+        for batch in train_loader:
+            if 'concept_seq' in batch:
+                print(f"'concept_seq' exists in train_loader with shape: {batch['concept_seq'].shape}")
+            else:
+                print("'concept_seq' does not exist in train_loader")
+            break  # Check only the first batch
+
+    def check_concept_seq_in_dataset(self):
+        dataset = self.objects["data_loaders"]["train_loader"].dataset
+        for data in dataset:
+            if 'concept_seq' in data:
+                print(f"'concept_seq' exists in dataset with shape: {data['concept_seq'].shape}")
+            else:
+                print("'concept_seq' does not exist in dataset")
+            break  # Check only the first data point
+
     def train(self):
         train_strategy = self.params["train_strategy"]
         grad_clip_config = self.params["grad_clip_config"]["kt_model"]
@@ -80,8 +99,10 @@ class KnowledgeTracingTrainer:
         model = self.objects["models"]["kt_model"]
 
         self.print_data_statics()
-
-        for epoch in range(1, num_epoch + 1):
+        self.check_concept_seq_in_loader()
+        self.check_concept_seq_in_dataset()      
+        # for epoch in range(1, num_epoch + 1): #Original
+        for epoch in range(1, 5): #Dima
             model.train()
 
             # 用于追踪每个epoch的细粒度predict loss指标
@@ -96,13 +117,29 @@ class KnowledgeTracingTrainer:
             question_hard_ground_truth_all = []
 
             for batch in train_loader:
+            # for i, batch in enumerate(train_loader): By Dima for test
+            #     print(i)
+            #     if i == 2:
+            #         break
+                            
+                print("New batch")
+                print(model.model_name)
                 if model.model_name == "DTransformer":
-                    batch["concept_seq"] = batch["concept_seq"].masked_fill(torch.eq(batch["mask_seq"], 0), -1)
-                    batch["question_seq"] = batch["question_seq"].masked_fill(torch.eq(batch["mask_seq"], 0), -1)
-                    batch["correct_seq"] = batch["correct_seq"].masked_fill(torch.eq(batch["mask_seq"], 0), -1)
+                    print("Using DTransformer model")
+                    print("concept_seq" in batch) 
+                    if "concept_seq" in batch:
+                        batch["concept_seq"] = batch["concept_seq"].masked_fill(torch.eq(batch["mask_seq"], 0), -1)
+                    if "question_seq" in batch:
+                        batch["question_seq"] = batch["question_seq"].masked_fill(torch.eq(batch["mask_seq"], 0), -1)
+                    if "correct_seq" in batch:
+                        batch["correct_seq"] = batch["correct_seq"].masked_fill(torch.eq(batch["mask_seq"], 0), -1)
                 optimizer.zero_grad()
                 loss_result = model.get_predict_loss(batch)
-                for loss_name, loss_info in loss_result["losses_value"].items():
+                
+                
+                # print(f"loss_result['predict_score_batch'] shape: {loss_result['predict_score_batch'].shape}")
+                for loss_name, loss_info in loss_result["losses_value"].items(): #ORIGINAL CODE
+                # for loss_name, loss_info in loss_result: 
                     if loss_name != "total loss":
                         self.loss_record.add_loss(loss_name, loss_info["value"], loss_info["num_sample"])
                 loss_result["total_loss"].backward()
@@ -114,6 +151,13 @@ class KnowledgeTracingTrainer:
                     # 追踪每个epoch的细粒度损失
                     model.eval()
                     fine_grained_loss_result = self.get_fine_grained_loss(batch, loss_result["predict_score_batch"])
+                    
+                    # Add checks and print statements
+                    print(f"fine_grained_loss_result['seq_easy_predict_score'] shape: {fine_grained_loss_result['seq_easy_predict_score'].shape}")
+                    print(f"fine_grained_loss_result['seq_easy_ground_truth'] shape: {fine_grained_loss_result['seq_easy_ground_truth'].shape}")
+                    print(f"fine_grained_loss_result['seq_hard_predict_score'] shape: {fine_grained_loss_result['seq_hard_predict_score'].shape}")
+                    print(f"fine_grained_loss_result['seq_hard_ground_truth'] shape: {fine_grained_loss_result['seq_hard_ground_truth'].shape}")
+                    
                     seq_easy_predict_score_all.append(fine_grained_loss_result["seq_easy_predict_score"])
                     seq_easy_ground_truth_all.append(fine_grained_loss_result["seq_easy_ground_truth"])
                     seq_hard_predict_score_all.append(fine_grained_loss_result["seq_hard_predict_score"])
@@ -264,11 +308,16 @@ class KnowledgeTracingTrainer:
         )
 
     def evaluate_fine_grained(self, data_loader, valid_or_test):
+        print("Evaluating fine-grained")
         model = self.best_model.to(self.params["device"])
         model.eval()
         with torch.no_grad():
             result_all_batch = []
-            for batch in data_loader:
+            for batch in data_loader: #Original
+            # for i, batch in enumerate(data_loader): #Dima
+            #     print(i)
+            #     if i == 3:
+            #         break
                 correct_seq = batch["correct_seq"]
                 question_seq = batch["question_seq"]
                 predict_score_batch = model.get_predict_score(batch)["predict_score_batch"]
@@ -410,7 +459,7 @@ class KnowledgeTracingTrainer:
             # 节省显存
             self.best_model = deepcopy(model).to("cpu")
             if save_model:
-                save_model_dir = self.params["save_model_dir"]
+                save_model_dir = "C:\\Users\\dimae\\source\\repos\\my-dlkt\\dlkt\\data_and_models\\lab\\saved_models"
                 model_weight_path = os.path.join(save_model_dir, "saved.ckt")
                 torch.save({"best_valid": model.state_dict()}, model_weight_path)
 
@@ -436,7 +485,11 @@ class KnowledgeTracingTrainer:
             result_all_batch = []
             predict_score_all = []
             ground_truth_all = []
-            for batch in data_loader:
+            for batch in data_loader: #ORIGINAL CODE
+            # for i, batch in enumerate(data_loader): #Dima for code test
+            #     print(i)
+            #     if i == 3:
+            #         break    
                 correct_seq = batch["correct_seq"]
                 mask_bool_seq = torch.ne(batch["mask_seq"], 0)
                 score_result = model.get_predict_score(batch)
@@ -563,3 +616,5 @@ class KnowledgeTracingTrainer:
                 fine_grained_data["question_hard_ground_truth"] = question_hard_ground_truth
 
             return fine_grained_data
+
+

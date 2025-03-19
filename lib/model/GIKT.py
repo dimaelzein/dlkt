@@ -167,10 +167,8 @@ class GIKT(nn.Module):
             "predict_score": predict_score,
             "predict_score_batch": predict_score_batch
         }
-
     def get_predict_loss(self, batch):
         mask_bool_seq = torch.ne(batch["mask_seq"], 0)
-
         predict_score_batch = self.forward(batch)[:, 1:]
         predict_score = torch.masked_select(predict_score_batch, mask_bool_seq[:, 1:])
         ground_truth = torch.masked_select(batch["correct_seq"][:, 1:], mask_bool_seq[:, 1:])
@@ -520,25 +518,77 @@ class GIKT_PYG(nn.Module):
             state_history[:, t] = gru2_output
         return y_hat
 
-    def get_predict_score(self, batch):
+    # def get_predict_score(self, batch): #Commented by DIma 
+    #     mask_bool_seq = torch.ne(batch["mask_seq"], 0)
+    #     predict_score = self.forward(batch)
+    #     predict_score = torch.masked_select(predict_score[:, 1:], mask_bool_seq[:, 1:])
+
+    #     return predict_score
+    
+    def get_predict_score(self, batch): #Copied by DIma from GIKT class
         mask_bool_seq = torch.ne(batch["mask_seq"], 0)
-        predict_score = self.forward(batch)
-        predict_score = torch.masked_select(predict_score[:, 1:], mask_bool_seq[:, 1:])
+        predict_score_batch = self.forward(batch)[:, 1:]
+        predict_score = torch.masked_select(predict_score_batch, mask_bool_seq[:, 1:])
 
-        return predict_score
+        return {
+            "predict_score": predict_score,
+            "predict_score_batch": predict_score_batch
+        }
 
-    def get_predict_loss(self, batch, loss_record=None):
+
+    
+    def get_predict_loss(self, batch): #deplaced by Dima from GIKT class to this class, and commented the one that was here
+        print("Callin the other function")
         mask_bool_seq = torch.ne(batch["mask_seq"], 0)
-
-        predict_score = self.get_predict_score(batch)
+        predict_score_batch = self.forward(batch)[:, 1:]
+        predict_score = torch.masked_select(predict_score_batch, mask_bool_seq[:, 1:])
         ground_truth = torch.masked_select(batch["correct_seq"][:, 1:], mask_bool_seq[:, 1:])
+
         predict_loss = nn.functional.binary_cross_entropy(predict_score.double(), ground_truth.double())
 
-        if loss_record is not None:
-            num_sample = torch.sum(batch["mask_seq"][:, 1:]).item()
-            loss_record.add_loss("predict loss", predict_loss.detach().cpu().item() * num_sample, num_sample)
+        num_sample = torch.sum(batch["mask_seq"][:, 1:]).item()
+        return {
+            "total_loss": predict_loss,
+            "losses_value": {
+                "predict loss": {
+                    "value": predict_loss.detach().cpu().item() * num_sample,
+                    "num_sample": num_sample
+                }
+            },
+            "predict_score": predict_score,
+            "predict_score_batch": predict_score_batch
+        }
 
-        return predict_loss
+# Commented by Dima to force calling the other funtion
+    # def get_predict_loss(self, batch, loss_record=None):
+    #     mask_bool_seq = torch.ne(batch["mask_seq"], 0)
+    #     # print("Trying to predict loss from lib/model/GIKT.py")
+    #     output = self.forward(batch)
+    #     # print("Forward output shape:", output.shape)
+    #     # print("mask_seq shape:", batch["mask_seq"].shape)
+    #     # print("mask_seq dtype:", batch["mask_seq"].dtype)
+    #     # print("New: mask_seq original shape:", batch["mask_seq"].shape)
+    #     predict_score = self.get_predict_score(batch)
+    #     # print("predict_score shape:", predict_score.shape)
+    #     # print("NEW: correct_seq original shape:", batch["correct_seq"].shape)
+    #     ground_truth = torch.masked_select(batch["correct_seq"][:, 1:], mask_bool_seq[:, 1:])
+    #     # print("ground_truth shape:", ground_truth.shape)
+    #     predict_loss = nn.functional.binary_cross_entropy(predict_score.double(), ground_truth.double())
+    #     # print("predict_score shape before loss:", predict_score.shape)
+    #     # print("ground_truth shape before loss:", ground_truth.shape)
+
+    #     if batch["correct_seq"].numel() == 0:
+    #         print("Error: correct_seq is empty!")
+
+    #     if batch["mask_seq"].numel() == 0:
+    #         print("Error: mask_seq is empty!")
+
+
+    #     if loss_record is not None:
+    #         num_sample = torch.sum(batch["mask_seq"][:, 1:]).item()
+    #         loss_record.add_loss("predict loss", predict_loss.detach().cpu().item() * num_sample, num_sample)
+    #     print(f"predict_loss type: {type(predict_loss)}, size: {predict_loss.size()}")
+    #     return predict_loss
 
     # def recap_hard(self, current_q, history_q):
     #     batch_size = current_q.shape[0]

@@ -66,7 +66,7 @@ def gikt_general_config(local_params, global_params, global_objects):
         }
     }
 
-    # 配置模型参数
+    # Configure model parameters
     num_concept = local_params["num_concept"]
     num_question = local_params["num_question"]
     dim_emb = local_params["dim_emb"]

@@ -16,12 +16,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # 数据集相关
     parser.add_argument("--setting_name", type=str, default="our_setting")
-    parser.add_argument("--dataset_name", type=str, default="statics2011")
-    parser.add_argument("--data_type", type=str, default="single_concept",
+    parser.add_argument("--dataset_name", type=str, default="assist2009",)
+    parser.add_argument("--data_type", type=str, default="multi_concept",
                         choices=("multi_concept", "single_concept", "only_question"))
-    parser.add_argument("--train_file_name", type=str, default="statics2011_train_fold_0.txt")
-    parser.add_argument("--valid_file_name", type=str, default="statics2011_valid_fold_0.txt")
-    parser.add_argument("--test_file_name", type=str, default="statics2011_test_fold_0.txt")
+    parser.add_argument("--train_file_name", type=str, default="assist2009_train_fold_0.txt")
+    parser.add_argument("--valid_file_name", type=str, default="assist2009_valid_fold_0.txt")
+    parser.add_argument("--test_file_name", type=str, default="assist2009_test_fold_0.txt")
     # 优化器相关参数选择
     parser.add_argument("--optimizer_type", type=str, default="adam", choices=("adam", "sgd"))
     parser.add_argument("--weight_decay", type=float, default=0)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     parser.add_argument("--dropout4gru", type=float, default=0.4)
     parser.add_argument("--dropout4gnn", type=float, default=0.2)
     # 其它
-    parser.add_argument("--save_model", type=str2bool, default=False)
+    parser.add_argument("--save_model", type=str2bool, default=True)
     parser.add_argument("--debug_mode", type=str2bool, default=False)
     parser.add_argument("--trace_epoch", type=str2bool, default=False)
     parser.add_argument("--use_cpu", type=str2bool, default=False)

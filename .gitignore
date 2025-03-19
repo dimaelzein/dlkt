@@ -6,6 +6,9 @@ tmp/
 back_up/
 .idea/
 paper/
+trained_models/
+.venv/
+
 
 deploy
 example4knowledge_tracing/result_cluster

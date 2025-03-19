@@ -4,29 +4,27 @@
 
 ## Our setting (Knowledge Tracing)
 
-- 该实验设置下，数据处理过程如下
+- Data Preprocessing: The sequence length is fixed at 200, truncated to a maximum length and padded to a minimum length, with sequences shorter than 3 being discarded.
 
-- 数据预处理：序列长度固定为200，截长补短，丢弃长度小于3的序列
+- Dataset Splitting: The dataset is divided by sequence, using 5-fold cross-validation to split into training and testing sets. Then, 20% of the training set in each fold is randomly selected as the validation set.
 
-  数据集划分：以序列为单位，5折交叉验证划分训练集和测试集，再在每折训练集中随机划分20%做验证集
+- Random Seed: All experiments fix the random seed to 0.
 
-  随机种子：所有实验都固定随机种子为0
+- Hyperparameter Selection: Hyperparameters are tuned on the 1st fold, the best hyperparameters are chosen based on the validation set, and then applied to the 5-fold cross-validation.
 
-  超参选择：在第1折上调参，根据验证集选择最好的超参，然后应用到5折上
+- Model Training Stopping Criteria: Early stopping. If the AUC metric on the validation set does not improve by more than 0.001 within 10 epochs, training is stopped. The maximum number of epochs is 200.
 
-  模型训练停止策略：early stop，如果验证集上AUC指标在10个epoch内提升不超过0.001，则停止训练，最大epoch数为200
+- Comparison Methods: After reproducing the results from the original paper under the experimental setup of the original paper, experiments are conducted under our setup. Hyperparameters are tuned within the same space as mentioned in the original paper.
 
-  对比方法：原论文实验设置下复现论文汇报结果后，再拉到我们的实验设置下统一做实验，都在原论文所提到的空间中调参
+- Reported Results: The average of the test set results under 5-fold cross-validation, with AUC as the evaluation metric.
 
-  汇报结果：5折下测试集的均值，指标为AUC
+- Run example/prepare_dataset/our_setting.py to obtain the partitioned dataset.
 
-- 运行`example/prepare_dataset/our_setting.py`获得划分好的数据集
+- All hyperparameters under this experimental setup can be found in the scripts located in example/scripts/our_setting.
 
-- 该实验设置下所有的超参数均可在`example/scripts/our_setting`下的脚本中获得
+- Based on our experience, knowledge tracing models are less sensitive to hyperparameters, so even with different experimental setups, the hyperparameters from this setup can be used to train the model without needing to retune them.
 
-- 根据我们的经验，知识追踪模型对超参数敏感度低，所以即使是不同的实验设置，也可以使用该实验设置下的超参数来训练模型，无需再次调参
-
-- [获取划分好的数据](https://drive.google.com/drive/folders/1HYERnQYJz3diK1TZXhd_gJDL7eW1VnOk?usp=sharing)
+Obtain the partitioned data [获取划分好的数据](https://drive.google.com/drive/folders/1HYERnQYJz3diK1TZXhd_gJDL7eW1VnOk?usp=sharing)
 
 ### Overall metric (AUC)
 
